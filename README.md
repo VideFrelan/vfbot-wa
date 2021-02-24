@@ -76,6 +76,8 @@ Edit file penting yg berada di 'config.json'
 | :-----------------: | :----------: |
 | YT to MP3           |      ✔️      |
 | YT to MP4           |      ✔️      |
+| Instagram TV        |      ✔️      |
+| Play MP3            |      ✔️      |
 
 |       Fun        | Availability |
 | :--------------: | :----------: |
