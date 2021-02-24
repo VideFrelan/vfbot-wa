@@ -72,6 +72,15 @@ Edit file penting yg berada di 'config.json'
 
 # Features
 
+
+|      Sticker Maker  | Availability |
+| :-----------------: | :----------: |
+| Image to Sticker    |      ✔️      |
+| GIF/Video to Sticker|      ✔️      |
+| Take Sticker        |      ✔️      |
+| Sticker GIF WM      |      ✔️      |
+| Sticker No crop     |      ✔️      |
+
 |      Downloader     | Availability |
 | :-----------------: | :----------: |
 | YT to MP3           |      ✔️      |
