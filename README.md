@@ -80,6 +80,7 @@ Edit file penting yg berada di 'config.json'
 | Take Sticker        |      ✔️      |
 | Sticker GIF WM      |      ✔️      |
 | Sticker No crop     |      ✔️      |
+| Emoji to Sticker    |      ✔️      |
 
 |      Downloader     | Availability |
 | :-----------------: | :----------: |
