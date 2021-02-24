@@ -1,0 +1,1 @@
+exports.register = require('./register')
