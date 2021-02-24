@@ -15,7 +15,7 @@ moment.tz.setDefault('Asia/Jakarta').locale('id')
          /*=_=_=_=_=_=_=_=_=_=_=_=_=_ MESSAGE HANDLER =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=*/
 module.exports = handler = async (vf = new vf(), message) => {
     try {
-        const { from, id, type, caption, chat, t, sender, isGroupMsg } = message
+        const { from, id, type, caption, chat, t, sender, isGroupMsg, isMedia, mimetype, quotedMsg, quotedMsgObj } = message
         let { body } = message
         const { owner, prefix } = config
         const { name, formattedTitle } = chat
@@ -27,6 +27,7 @@ module.exports = handler = async (vf = new vf(), message) => {
         const query = args.join(' ')
         const url = args.length !== 0 ? args[0] : ''
         const now = moment(t * 1000).format('DD/MM/YYYY HH:mm:ss')
+        const uaOverride = config.uaOverride
         /*=_=_=_=_=_=_=_=_=_=_=_=_=_ END OF MESSAGE HANDLER =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=*/
 
         /*=_=_=_=_=_=_=_=_=_=_=_=_=_ VALIDATOR =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=*/
@@ -36,6 +37,10 @@ module.exports = handler = async (vf = new vf(), message) => {
         const isOwner = sender.id === owner
         const isRegistered = register.checkRegisteredUser(sender.id, _registered)
         const time = moment(t * 1000).format('DD/MM/YY HH:mm:ss')
+        const isImage = type === 'image'
+        const isQuotedImage = quotedMsg && quotedMsg.type === 'image'
+        const isQuotedVideo = quotedMsg && quotedMsg.type === 'video'
+        const isQuotedGif = quotedMsg && quotedMsg.mimetype === 'image/gif'
         /*=_=_=_=_=_=_=_=_=_=_=_=_=_ END OF VALIDATOR =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=*/
 
         // Anti-spam
@@ -55,13 +60,139 @@ module.exports = handler = async (vf = new vf(), message) => {
         switch (command) {
             case 'register': //By: Slavyam
                 if (isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
-                if (!query.includes('|') return await vf.reply(from, `Format salah!\ngunakan ${prefix}register Nama | umur`, id)
                 const namaUser = query.substring(0, query.indexOf('|') - 1)
                 const umurUser = query.substring(query.lastIndexOf('|') + 2)
                 const serialUser = register.createSerial(10)
                 register.addRegisteredUser(sender.id, namaUser, umurUser, time, serialUser, _registered)
                 await vf.reply(from, `*「 REGISTRATION 」*\n\nRegistrasi berhasil!\n\n=======================\n➸ *Nama*: ${namaUser}\n➸ *Umur*: ${umurUser}\n➸ *Waktu pendaftaran*: ${now}\n➸ *Serial*: ${serialUser}\n=======================`, id)
             break
+            case 'antiporn'://PREMIUM
+                await vf.reply(from, 'Premium feature!\nContact: wa.me/6285692655520', id)
+            break
+            /*STICKER MAKER*/
+            case 'takestick':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                    if (quotedMsg && quotedMsg.type == 'sticker') {
+                        if (!query.includes('|')) return await vf.reply(from, `Untuk mengubah watermark sticker, reply sticker dengan caption ${prefix}takestick package_name | author_name\n\nContoh: ${prefix}takestick PUNYA GUA | videfikri`, id)
+                        await vf.reply(from, msg.wait(), id)
+                        const packnames = q.substring(0, q.indexOf('|') - 1)
+                        const authors = q.substring(q.lastIndexOf('|') + 2)
+                        const mediaData = await decryptMedia(quotedMsg)
+                        const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
+                        await vf.sendImageAsSticker(from, imageBase64, { author: `${authors}`, pack: `${packnames}` })
+                        .catch(async (err) => {
+                            console.error(err)
+                            await vf.reply(from, 'Error!', id)
+                        })
+                    } else {
+                        await vf.reply(from, `Reply sticker yang ingin dicolong dengan caption ${prefix}takestick package_name | author_name\n\nContoh: ${prefix}takestick punya gua | videfikri`, id)
+                    }
+        break
+            case 'sgifwm':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (isMedia && type === 'video' || mimetype === 'image/gif') {
+                    if (!query.includes('|')) return await vf.reply(from, `Untuk membuat stickergif watermark\ngunakan ${prefix}sgifwm author | packname`, id)
+                    const namaPacksgif = q.substring(0, q.indexOf('|') - 1)
+                    const authorPacksgif = q.substring(q.lastIndexOf('|') + 2)
+                    await vf.reply(from, msg.wait(), id)
+                    try {
+                        const mediaData = await decryptMedia(message, uaOverride)
+                        const videoBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
+                        await vf.sendMp4AsSticker(from, videoBase64, { fps: 10, startTime: `00:00:00.0`, endTime : `00:00:06.0`, loop: 0 }, { author: `${authorPacksgif}`, pack: `${namaPacksgif}`, keepScale: true })
+                            .then(async () => {
+                                console.log(`Sticker processed for ${processTime(t, moment())} seconds`)
+                                
+                            })
+                    } catch (err) {
+                        console.error(err)
+                        await vf.reply(from, `Ukuran video terlalu besar\nMaksimal size adalah 1MB!`, id)
+                    }
+                } else if (isQuotedGif || isQuotedVideo) {
+                    const namaPacksgif = q.substring(0, q.indexOf('|') - 1)
+                    const authorPacksgif = q.substring(q.lastIndexOf('|') + 2)
+                    await vf.reply(from, msg.wait(), id)
+                    try {
+                        const mediaData = await decryptMedia(quotedMsg, uaOverride)
+                        const videoBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
+                        await vf.sendMp4AsSticker(from, videoBase64, { fps: 10, startTime: `00:00:00.0`, endTime : `00:00:06.0`, loop: 0 }, { author: `${authorPacksgif}`, pack: `${namaPacksgif}`, crop: false })
+                            .then(async () => {
+                                console.log(`Sticker processed for ${processTime(t, moment())} seconds`)
+                                
+                            })
+                    } catch (err) {
+                        console.error(err)
+                        await vf.reply(from, `Ukuran video terlalu besar\nMaksimal size adalah 1MB!`, id)
+                    }
+                } else {
+                    await vf.reply(from, `Untuk membuat stickergif dengan watermark\ngunakan ${prefix}sgifwm author | packname`, id)
+                }
+            break
+            case 'stickernocrop':
+            case 'stnc':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (isMedia && isImage || isQuotedImage) {
+                    await vf.reply(from, msg.wait(), id)
+                    const encryptMedia = isQuotedImage ? quotedMsg : message
+                    const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
+                    const mediaData = await decryptMedia(encryptMedia, uaOverride)
+                    const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
+                    await vf.sendImageAsSticker(from, imageBase64, { keepScale: true, author: 'videfikri', pack: 'VF BOT' })
+                    console.log(`Sticker processed for ${processTime(t, moment())} seconds`)
+                    } else {
+                    await vf.reply(from, `Untuk membuat sticker no crop\nsilahkan *upload* atau reply foto dengan caption ${prefix}stnc`, id)
+                }
+            break
+            case 'sticker':
+            case 'stiker':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (isMedia && isImage || isQuotedImage) {
+                    await vf.reply(from, msg.wait(), id)
+                    const encryptMedia = isQuotedImage ? quotedMsg : message
+                    const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
+                    const mediaData = await decryptMedia(encryptMedia, uaOverride)
+                    const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
+                    await vf.sendImageAsSticker(from, imageBase64, { author: 'videfikri', pack: 'VF BOT' })
+                    console.log(`Sticker processed for ${processTime(t, moment())} seconds`)
+                    } else {
+                    await vf.reply(from, `Untuk membuat sticker\nsilahkan *upload* atau reply foto dengan caption ${prefix}sticker`, id)
+                }
+            break
+            case 'stickergif':
+            case 'stikergif':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (isMedia && type === 'video' || mimetype === 'image/gif') {
+                    await vf.reply(from, msg.wait(), id)
+                    try {
+                        const mediaData = await decryptMedia(message, uaOverride)
+                        const videoBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
+                        await vf.sendMp4AsSticker(from, videoBase64, { fps: 10, startTime: `00:00:00.0`, endTime : `00:00:06.0`, loop: 0 }, { author: 'VF BOT', pack: 'videfikri' })
+                            .then(async () => {
+                                console.log(`Sticker processed for ${processTime(t, moment())} seconds`)
+                                
+                            })
+                    } catch (err) {
+                        console.error(err)
+                        await vf.reply(from, `Ukuran video terlalu besar\nMaksimal size adalah 1MB!`, id)
+                    }
+                } else if (isQuotedGif || isQuotedVideo) {
+                    await vf.reply(from, msg.wait(), id)
+                    try {
+                        const mediaData = await decryptMedia(quotedMsg, uaOverride)
+                        const videoBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
+                        await vf.sendMp4AsSticker(from, videoBase64, { fps: 10, startTime: `00:00:00.0`, endTime : `00:00:06.0`, loop: 0 }, { author: 'VF BOT', pack: 'videfikri' })
+                            .then(async () => {
+                                console.log(`Sticker processed for ${processTime(t, moment())} seconds`)
+                                
+                            })
+                    } catch (err) {
+                        console.error(err)
+                        await vf.reply(from, `Ukuran video terlalu besar\nMaksimal size adalah 1MB!`, id)
+                    }
+                } else {
+                    await vf.reply(from, `Untuk mengconvert GIF/Video menjadi stikergif silahkan upload video/gif dengan caption ${prefix}stikergif`, id)
+                }
+            break
+            /*END OF STICKER MAKER*/
             /*DOWNLOADER*/
             case 'play':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
