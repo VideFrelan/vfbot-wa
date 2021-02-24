@@ -89,7 +89,7 @@ Edit file penting yg berada di 'config.json'
 
 |   Group Security   | Availability |
 | :----------------: | :----------: |
-| Anti porn         |      ✔️      |
+| Anti porn         |    PREMIUM    |
 
 # To-do
 * Menambahkan lebih banyak fitur dari [VideFikri API's](https://videfikri.com/api).
