@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://i.ibb.co/tPZZZdF/logo.png" alt="vfbot-wa" width="500" />
+<img src="https://i.ibb.co/tPZZZdF/logo.png" alt="vfbot-wa" width="300" />
 
 # VFBOT
 
