@@ -55,6 +55,7 @@ module.exports = handler = async (vf = new vf(), message) => {
         switch (command) {
             case 'register': //By: Slavyam
                 if (isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query.includes('|') return await vf.reply(from, `Format salah!\ngunakan ${prefix}register Nama | umur`, id)
                 const namaUser = query.substring(0, query.indexOf('|') - 1)
                 const umurUser = query.substring(query.lastIndexOf('|') + 2)
                 const serialUser = register.createSerial(10)
