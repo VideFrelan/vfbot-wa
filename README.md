@@ -58,7 +58,9 @@ Edit file penting yg berada di 'config.json'
 ```
 
 `owner`: nomor WhatsApp anda (Bukan nomor bot). 
+
 `prefix`: prefix bot. 
+
 `uaOverride`: your user agent.  
 
 ## 🆗 Menjalankan bot
