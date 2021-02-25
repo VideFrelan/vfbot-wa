@@ -109,7 +109,7 @@ Edit file penting yg berada di 'config.json'
 
 |   Group Security   | Availability |
 | :----------------: | :----------: |
-| Anti Porn         |      ✔️      |
+| Anti Virtext      |      ✔️      |
 | Anti Porn         |    PREMIUM    |
 
 # To-do
