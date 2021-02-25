@@ -3,7 +3,7 @@ const { vf } = require('@open-wa/wa-automate')
 const { color, msgFilter, processTime, isUrl} = require('./function')
 const { register } = require('./data')
 const { msg } = require('./msg')
-const { downloader, stalker, fun } = require('./lib')
+const { downloader, stalker, fun, spammer } = require('./lib')
 const config = require('./config.json')
 const fs = require('fs-extra')
 const fetch = require('node-fetch')
@@ -22,12 +22,15 @@ module.exports = handler = async (vf = new vf(), message) => {
         let { pushname, formattedName, verifiedName } = sender
         pushname = pushname || formattedName || verifiedName
         body = (type === 'chat' && body.startsWith(prefix)) ? body : (((type === 'image') && caption) && caption.startsWith(prefix)) ? caption : ''
+        
+        const chats = (type === 'chat') ? body : ((type === 'image' || type === 'video')) ? caption : ''
         const command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
         const args = body.trim().split(/ +/).slice(1)
         const query = args.join(' ')
         const url = args.length !== 0 ? args[0] : ''
         const now = moment(t * 1000).format('DD/MM/YYYY HH:mm:ss')
         const uaOverride = config.uaOverride
+        const groupId = isGroupMsg ? chat.groupMetadata.id : ''
         /*=_=_=_=_=_=_=_=_=_=_=_=_=_ END OF MESSAGE HANDLER =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=*/
 
         /*=_=_=_=_=_=_=_=_=_=_=_=_=_ VALIDATOR =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=*/
@@ -42,6 +45,12 @@ module.exports = handler = async (vf = new vf(), message) => {
         const isQuotedVideo = quotedMsg && quotedMsg.type === 'video'
         const isQuotedGif = quotedMsg && quotedMsg.mimetype === 'image/gif'
         /*=_=_=_=_=_=_=_=_=_=_=_=_=_ END OF VALIDATOR =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=*/
+
+        // ANTI-VIRTEXT
+        if (chats.length > 5000) {
+            await vf.sendTextWithMentions(from, `Terdeteksi @${sender.id} telah mengirim Virtext\nAkan dikeluarkan dari group!`)
+            await vf.removeParticipant(groupId, sender.id)
+        }
 
         // Anti-spam
         if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg) return console.log(color('[SPAM]', 'red'), color(time, 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
@@ -131,6 +140,7 @@ module.exports = handler = async (vf = new vf(), message) => {
             case 'stnc':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (isMedia && isImage || isQuotedImage) {
+                    try {
                     await vf.reply(from, msg.wait(), id)
                     const encryptMedia = isQuotedImage ? quotedMsg : message
                     const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
@@ -138,14 +148,19 @@ module.exports = handler = async (vf = new vf(), message) => {
                     const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
                     await vf.sendImageAsSticker(from, imageBase64, { keepScale: true, author: 'videfikri', pack: 'VF BOT' })
                     console.log(`Sticker processed for ${processTime(t, moment())} seconds`)
-                    } else {
-                    await vf.reply(from, `Untuk membuat sticker no crop\nsilahkan *upload* atau reply foto dengan caption ${prefix}stnc`, id)
+                } catch (err) {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
                 }
+            } else {
+                await vf.reply(from, `Untuk membuat sticker no crop\nsilahkan *upload* atau reply foto dengan caption ${prefix}stnc`, id)
+            }
             break
             case 'sticker':
             case 'stiker':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (isMedia && isImage || isQuotedImage) {
+                    try {
                     await vf.reply(from, msg.wait(), id)
                     const encryptMedia = isQuotedImage ? quotedMsg : message
                     const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
@@ -153,9 +168,13 @@ module.exports = handler = async (vf = new vf(), message) => {
                     const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
                     await vf.sendImageAsSticker(from, imageBase64, { author: 'videfikri', pack: 'VF BOT' })
                     console.log(`Sticker processed for ${processTime(t, moment())} seconds`)
-                    } else {
-                    await vf.reply(from, `Untuk membuat sticker\nsilahkan *upload* atau reply foto dengan caption ${prefix}sticker`, id)
+                } catch (err) {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
                 }
+            } else {
+                await vf.reply(from, `Untuk membuat sticker\nsilahkan *upload* atau reply foto dengan caption ${prefix}sticker`, id)
+            }
             break
             case 'stickergif':
             case 'stikergif':
@@ -193,6 +212,7 @@ module.exports = handler = async (vf = new vf(), message) => {
                 }
             break
             /*END OF STICKER MAKER*/
+
             /*DOWNLOADER*/
             case 'play':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
@@ -212,6 +232,10 @@ module.exports = handler = async (vf = new vf(), message) => {
                         console.log('Success sending Play MP3!')
                         fs.unlinkSync(`./temp/audio/${sender.id}.mp3`)
                     }
+                }) 
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
                 })
                 break
                 case 'igtv':
@@ -223,6 +247,10 @@ module.exports = handler = async (vf = new vf(), message) => {
                         const { username, thumb, full_name, video_url, duration, caption, comment, likes } = await result
                         await vf.sendFileFromUrl(from, thumb, 'thumbnail.jpg', `➸ *Username*: ${username}\n➸ *Full Name*: ${full_name}\n➸ *Duration*: ${duration}\n➸ *Caption*: ${caption}\n➸ *Comment*: ${comment}\n➸ *Likes*: ${likes}`, id)
                         await vf.sendFileFromUrl(from, video_url, 'igtv.mp4', '', id)
+                    }) 
+                    .catch(async (err) => {
+                        console.error(err)
+                        await vf.reply(from, 'Error!', id)
                     })
                 break
                 case 'ytmp3':
@@ -238,6 +266,10 @@ module.exports = handler = async (vf = new vf(), message) => {
                         await vf.sendFileFromUrl(from, thumbnail, 'thumbnail.jpg', `➸ *Judul*: ${judul}\n➸ *Size*: ${size}\n➸ *ID*: ${id}\n➸ *Extensiom*: ${extension}\n➸ *Source*: ${source}\n\nSedang dikirim, sabar ya...`, id)
                         await vf.sendFileFromUrl(from, url, 'ytmp3.mp3', '', id)
                         }
+                    }) 
+                    .catch(async (err) => {
+                        console.error(err)
+                        await vf.reply(from, 'Error!', id)
                     })
                 break
                 case 'ytmp4':
@@ -249,6 +281,10 @@ module.exports = handler = async (vf = new vf(), message) => {
                         const { judul, id, source, imgUrl, urlVideo } = await result
                         await vf.sendFileFromUrl(from, imgUrl, 'thumbnail.jpg', `➸ *Judul*: ${judul}\n➸ *ID*: ${id}\n➸ *Source*: ${source}\n\nSedang dikirim, sabar ya...`, id)
                         await vf.sendFileFromUrl(from, urlVideo, 'ytmp3.mp3', '', id)
+                    }) 
+                    .catch(async (err) => {
+                        console.error(err)
+                        await vf.reply(from, 'Error!', id)
                     })
                 break
                 /*END OF DOWNLOADER*/
@@ -262,6 +298,10 @@ module.exports = handler = async (vf = new vf(), message) => {
                 .then(async ({result}) => {
                     const { full_name, username, bio, followers, following, post_count, profile_hd, is_verified, is_private, external_url, fbid, show_suggested_profile } = await result
                     await vf.sendFileFromUrl(from, profile_hd, 'ProfileIgStalker.jpg', `➸ *Username*: ${username}\n *Full Name*: ${full_name}\n➸ *Biography*: ${bio}\n➸ *Followers*: ${followers}\n➸ *Following*: ${following}\n➸ *Post*: ${post_count}\n➸ *Is_Verified*: ${is_verified}\n➸ *Is_Private*: ${is_private}\n➸ *External URL*: ${external_url}\n➸ *FB ID*: ${fbid}\n➸ *Show Suggestion*: ${show_suggested_profile}`, id)
+                }) 
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
                 })
             break
             case 'twtprof':
@@ -273,6 +313,10 @@ module.exports = handler = async (vf = new vf(), message) => {
                     const { full_name, username, followers, following, tweets, profile, verified, listed_count, favourites, joined_on, profile_banner } = await result
                     await vf.sendFileFromUrl(from, profile, 'ProfileTwitter.jpg', `➸ *Username*: ${username}\n *Full Name*: ${full_name}\n➸ *Followers*: ${followers}\n➸ *Following*: ${following}\n➸ *Tweet*: ${tweets}\n➸ *Is_Verified*: ${verified}\n➸ *Favourites*: ${favourites}\n➸ *Listed Count*: ${listed_count}\n➸ *Joined On*: ${joined_on}\n➸ *Profile Banner*: ${profile_banner}`, id)
                 })
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                })
             break
             case 'github':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
@@ -283,8 +327,13 @@ module.exports = handler = async (vf = new vf(), message) => {
                     const { username, id, profile_pic, fullname, company, blog, location, email, hireable, biografi, public_repository, public_gists, followers, following, joined_on, last_updated, profile_url} = await result
                     await vf.sendFileFromUrl(from, profile_pic, 'ProfileGithub.jpg', `➸ *Username*: ${username}\n➸ *Full Name*: ${fullname}\n➸ *ID*: ${id}\n➸ *Company*: ${company}\n➸ *Blog*: ${blog}\n➸ *Location*: ${location}\n➸ *Email*: ${email}\n➸ *Hireable*: ${hireable}\n➸ *Biography*: ${biografi}\n➸ *Public Repository*: ${public_repository}\n➸ *Public Gists*: ${public_gists}\n➸ *Followers*: ${followers}\n➸ *Following*: ${following}\n➸ *Joined On*: ${joined_on}\n➸ *Last Updated*: ${last_updated}\n➸ *Profile URL*: ${profile_url}`, id)
                 })
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                })
             break
             /*END OF STALKER*/
+
             /* FUN MENU*/
             case 'simi':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
@@ -293,15 +342,89 @@ module.exports = handler = async (vf = new vf(), message) => {
                 .then(async ({result}) => {
                     await vf.reply(from, result.jawaban, id)
                 })
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                })
+            break
+            case 'balikhuruf':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query) return await vf.reply(from, `Untuk membalik huruf\ngunakan ${prefix}balikhuruf teks`, id)
+                fun.balikhuruf(query)
+                .then(async ({result}) => {
+                    await vf.reply(from, result.kata, id)
+                })
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                })
+            break
+            case 'hitunghuruf':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query) return await vf.reply(from, `Untuk menghitung jumlah huruf\ngunakan ${prefix}hitunghuruf teks`, id)
+                fun.hitunghuruf(query)
+                .then(async ({result}) => {
+                    await vf.reply(from, result.jumlah, id)
+                })
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                })
+            break
+            case 'hilih':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query) return await vf.reply(from, `Untuk membuat hilih teks\ngunakan ${prefix}hilih teks\n\nContoh: ${prefix}hilih halah bacot`, id)
+                fun.hilihteks(query)
+                .then(async ({result}) => {
+                    await vf.reply(from, result.kata, id)
+                })
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                })
             break
             /* END OF FUN MENU */
+            
+            /*SPAMMER*/
+            case 'email':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query.includes('|')) return await vf.reply(from, `Untuk mengirim email kepada seseorang\ngunakan ${prefix}email target | subjek | pesan`, id)
+                const target = query.substring(0, q.indexOf('|') - 1)
+                const subjek = query.substring(q.indexOf('|') + 2, q.lastIndexOf('|') - 1)
+                const pesan = query.substring(q.lastIndexOf('|') + 2)
+                spammer.email(target, subjek, pesan)
+                .then(async ({result}) => {
+                    await vf.reply(from, result.log_lengkap, id)
+                })
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                })
+            break
+            case 'call':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query) return await vf.reply(from, `Untuk mengirim panggilan kepada seseorang\ngunakan ${prefix}call nomor_telpon`, id)
+                spammer.call(query)
+                .then(async ({result}) => {
+                    await vf.reply(from, result.logs, id)
+                })
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                })
+            break
             /* OTHERS */
             case 'emot':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Format salah!\nuntuk meng-stalk akun Github\ngunakan ${prefix}github username`, id)
+                try {
                 await vf.reply(from, msg.wait(), id)
                 const emoji = emojiUnicode(query)
                 await vf.sendStickerfromUrl(from, `https://videfikri.com/api/emojitopng/?emojicode=${emoji}`)
+                } catch (err) {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                }
             break
             case 'menu':
             case 'help':
