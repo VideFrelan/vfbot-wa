@@ -1,7 +1,7 @@
 /* eslint-disable no-case-declarations */
-const { vf } = require('@open-wa/wa-automate')
+const { decryptMedia, vf } = require('@open-wa/wa-automate')
 const { color, msgFilter, processTime, isUrl} = require('./function')
-const { register } = require('./data')
+const { register } = require('./data/')
 const { msg } = require('./msg')
 const { downloader, stalker, fun, spammer } = require('./lib')
 const config = require('./config.json')
@@ -84,8 +84,8 @@ module.exports = handler = async (vf = new vf(), message) => {
                     if (quotedMsg && quotedMsg.type == 'sticker') {
                         if (!query.includes('|')) return await vf.reply(from, `Untuk mengubah watermark sticker, reply sticker dengan caption ${prefix}takestick package_name | author_name\n\nContoh: ${prefix}takestick PUNYA GUA | videfikri`, id)
                         await vf.reply(from, msg.wait(), id)
-                        const packnames = q.substring(0, q.indexOf('|') - 1)
-                        const authors = q.substring(q.lastIndexOf('|') + 2)
+                        const packnames = query.substring(0, query.indexOf('|') - 1)
+                        const authors = query.substring(query.lastIndexOf('|') + 2)
                         const mediaData = await decryptMedia(quotedMsg)
                         const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
                         await vf.sendImageAsSticker(from, imageBase64, { author: `${authors}`, pack: `${packnames}` })
@@ -101,8 +101,8 @@ module.exports = handler = async (vf = new vf(), message) => {
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (isMedia && type === 'video' || mimetype === 'image/gif') {
                     if (!query.includes('|')) return await vf.reply(from, `Untuk membuat stickergif watermark\ngunakan ${prefix}sgifwm author | packname`, id)
-                    const namaPacksgif = q.substring(0, q.indexOf('|') - 1)
-                    const authorPacksgif = q.substring(q.lastIndexOf('|') + 2)
+                    const namaPacksgif = query.substring(0, query.indexOf('|') - 1)
+                    const authorPacksgif = query.substring(query.lastIndexOf('|') + 2)
                     await vf.reply(from, msg.wait(), id)
                     try {
                         const mediaData = await decryptMedia(message, uaOverride)
@@ -117,8 +117,8 @@ module.exports = handler = async (vf = new vf(), message) => {
                         await vf.reply(from, `Ukuran video terlalu besar\nMaksimal size adalah 1MB!`, id)
                     }
                 } else if (isQuotedGif || isQuotedVideo) {
-                    const namaPacksgif = q.substring(0, q.indexOf('|') - 1)
-                    const authorPacksgif = q.substring(q.lastIndexOf('|') + 2)
+                    const namaPacksgif = query.substring(0, query.indexOf('|') - 1)
+                    const authorPacksgif = query.substring(query.lastIndexOf('|') + 2)
                     await vf.reply(from, msg.wait(), id)
                     try {
                         const mediaData = await decryptMedia(quotedMsg, uaOverride)
@@ -389,9 +389,9 @@ module.exports = handler = async (vf = new vf(), message) => {
             case 'email':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query.includes('|')) return await vf.reply(from, `Untuk mengirim email kepada seseorang\ngunakan ${prefix}email target | subjek | pesan`, id)
-                const target = query.substring(0, q.indexOf('|') - 1)
-                const subjek = query.substring(q.indexOf('|') + 2, q.lastIndexOf('|') - 1)
-                const pesan = query.substring(q.lastIndexOf('|') + 2)
+                const target = query.substring(0, query.indexOf('|') - 1)
+                const subjek = query.substring(query.indexOf('|') + 2, query.lastIndexOf('|') - 1)
+                const pesan = query.substring(query.lastIndexOf('|') + 2)
                 spammer.email(target, subjek, pesan)
                 .then(async ({result}) => {
                     await vf.reply(from, result.log_lengkap, id)
@@ -420,7 +420,7 @@ module.exports = handler = async (vf = new vf(), message) => {
                 try {
                 await vf.reply(from, msg.wait(), id)
                 const emoji = emojiUnicode(query)
-                await vf.sendStickerfromUrl(from, `https://videfikri.com/api/emojitopng/?emojicode=${emoji}`)
+                await vf.sendImageAsSticker(from, await vf.download(`https://videfikri.com/api/emojitopng/?emojicode=${emoji}`), { author: 'videfikri', pack: 'VF BOT' })
                 } catch (err) {
                     console.error(err)
                     await vf.reply(from, 'Error!', id)
