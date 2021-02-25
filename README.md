@@ -40,7 +40,7 @@
 * Any text editor
 
 # Instalasi
-## 📝 Clone Repo & Instalasi dependenci
+## 💻 Clone Repo & Instalasi dependencies
 ```bash
 > git clone https://github.com/VideFrelan/vfbot-wa
 > cd vfbot-wa
@@ -112,7 +112,7 @@ Edit file penting yg berada di 'config.json'
 | Anti Virtext      |      ✔️      |
 | Anti Porn         |    PREMIUM    |
 
-# To-do
+# 📝 To-do
 * Menambahkan lebih banyak fitur dari [VideFikri API's](https://videfikri.com/api).
 * Menambahkan lebih banyak internal function.
 
