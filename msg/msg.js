@@ -30,9 +30,25 @@ exports.menu = (pushname) => {
 ╠☞ *${prefix}twtprof*
 ╠☞ *${prefix}github*
 ║
-╠══★〘 CONVERTER 〙★══
+╠══★〘 STICKER 〙★══
 ║
+╠☞ *${prefix}sticker*
+╠☞ *${prefix}stickergif*
+╠☞ *${prefix}sgifwm*
+╠☞ *${prefix}takestick*
 ╠☞ *${prefix}emot*
+║
+╠══★〘 FUN 〙★══
+║
+╠☞ *${prefix}simi*
+╠☞ *${prefix}hilih*
+╠☞ *${prefix}balikhuruf*
+╠☞ *${prefix}hitunghuruf*
+║
+╠══★〘 SPAMMER 〙★══
+║
+╠☞ *${prefix}email*
+╠☞ *${prefix}call*
 ║
 ║══★〘 VIDE FIKRI BOT 〙★══
 `
