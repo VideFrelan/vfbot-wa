@@ -79,7 +79,7 @@ Edit file penting yg berada di 'config.json'
 | GIF/Video to Sticker|      ✔️      |
 | Take Sticker        |      ✔️      |
 | Sticker GIF WM      |      ✔️      |
-| Sticker No crop     |      ✔️      |
+| Sticker No Crop     |      ✔️      |
 | Emoji to Sticker    |      ✔️      |
 
 |      Downloader     | Availability |
@@ -92,6 +92,9 @@ Edit file penting yg berada di 'config.json'
 |       Fun        | Availability |
 | :--------------: | :----------: |
 | SimSimi          |      ✔️      |
+| Balik Huruf      |      ✔️      |
+| Hitung Huruf     |      ✔️      |
+| Hilih Teks       |      ✔️      |
 
 |      Stalker       | Availability |
 | :----------------: | :----------: |
@@ -99,9 +102,15 @@ Edit file penting yg berada di 'config.json'
 | Instagram Profile  |      ✔️      |
 | Twitter Profile    |      ✔️      |
 
+|      Spammer      | Availability |
+| :----------------: | :----------: |
+| Email              |      ✔️      |
+| Call               |      ✔️      |
+
 |   Group Security   | Availability |
 | :----------------: | :----------: |
-| Anti porn         |    PREMIUM    |
+| Anti Porn         |      ✔️      |
+| Anti Porn         |    PREMIUM    |
 
 # To-do
 * Menambahkan lebih banyak fitur dari [VideFikri API's](https://videfikri.com/api).
