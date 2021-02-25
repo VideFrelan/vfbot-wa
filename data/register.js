@@ -1,159 +1,89 @@
 const fs = require('fs-extra')
+const _registered = JSON.parse(fs.readFileSync('./database/registered.json'))
+const crypto = require('crypto')
 
-/**
- * Add user to database.
- * @param {string} userId 
- * @param {string} name 
- * @param {string|number} age 
- * @param {string} time 
- * @param {string} serial 
- * @param {object} _dir 
- */
-const addRegisteredUser = (userId, name, age, time, serial, _dir) => {
+const getRegisteredRandomId = () => {
+    return _registered[Math.floor(Math.random() * _registered.length)].id
+}
+
+const addRegisteredUser = (userId, name, age, time, serial) => {
     const obj = { id: userId, name: name, age: age, time: time, serial: serial }
-    _dir.push(obj)
-    fs.writeFileSync('./database/registered.json', JSON.stringify(_dir))
+    _registered.push(obj)
+    fs.writeFileSync('./database/registered.json', JSON.stringify(_registered))
 }
 
-/**
- * Check is user registered.
- * @param {string} userId 
- * @param {object} _dir 
- * @returns {boolean}
- */
-const checkRegisteredUser = (userId, _dir) => {
+const createSerial = (size) => {
+    return crypto.randomBytes(size).toString('hex').slice(0, size)
+}
+
+const checkRegisteredUser = (userId) => {
     let status = false
-    Object.keys(_dir).forEach((i) => {
-        if (_dir[i].id === userId) {
+    Object.keys(_registered).forEach((i) => {
+        if (_registered[i].id === userId) {
             status = true
         }
     })
     return status
 }
 
-/**
- * Check is user registered from given serial.
- * @param {string} serial 
- * @param {object} _dir 
- * @returns {boolean}
- */
-const checkRegisteredUserFromSerial = (serial, _dir) => {
+const checkRegisteredUserFromSerial = (serial) => {
     let status = false
-    Object.keys(_dir).forEach((i) => {
-        if (_dir[i].serial === serial) {
+    Object.keys(_registered).forEach((i) => {
+        if (_registered[i].serial === serial) {
             status = true
         }
     })
     return status
 }
 
-/**
- * Get registered user ID.
- * @param {string} userId
- * @param {object} _dir
- * @returns {string}
- */
-const getRegisteredUserId = (userId, _dir) => {
-    let position = null
-    Object.keys(_dir).forEach((i) => {
-        if (_dir[i].id === userId) {
+const getRegisteredNameFromSerial = (serial) => {
+    let position = false
+    Object.keys(_registered).forEach((i) => {
+        if (_registered[i].serial === serial) {
             position = i
         }
     })
-    if (position !== null) {
-        return _dir[position].id
-    }
+    return _registered[position].name
 }
 
-/**
- * Check user name from serial.
- * @param {string} serial 
- * @param {object} _dir 
- * @returns {string}
- */
-const getRegisteredNameFromSerial = (serial, _dir) => {
-    let position = null
-    Object.keys(_dir).forEach((i) => {
-        if (_dir[i].serial === serial) {
+const getRegisteredAgeFromSerial = (serial) => {
+    let position = false
+    Object.keys(_registered).forEach((i) => {
+        if (_registered[i].serial === serial) {
             position = i
         }
     })
-    if (position !== null) {
-        return _dir[position].name
-    }
+    return _registered[position].age
 }
 
-/**
- * Check user age from serial.
- * @param {string} serial 
- * @param {object} _dir 
- * @returns {number}
- */
-const getRegisteredAgeFromSerial = (serial, _dir) => {
-    let position = null
-    Object.keys(_dir).forEach((i) => {
-        if (_dir[i].serial === serial) {
+const getRegisteredTimeFromSerial = (serial) => {
+    let position = false
+    Object.keys(_registered).forEach((i) => {
+        if (_registered[i].serial === serial) {
             position = i
         }
     })
-    if (position !== null) {
-        return _dir[position].age
-    }
+    return _registered[position].time
 }
 
-/**
- * Check user time registration from serial.
- * @param {string} serial 
- * @param {object} _dir 
- * @returns {string}
- */
-const getRegisteredTimeFromSerial = (serial, _dir) => {
-    let position = null
-    Object.keys(_dir).forEach((i) => {
-        if (_dir[i].serial === serial) {
+const getRegisteredIdFromSerial = (serial) => {
+    let position = false
+    Object.keys(_registered).forEach((i) => {
+        if (_registered[i].serial === serial) {
             position = i
         }
     })
-    if (position !== null) {
-        return _dir[position].time
-    }
-}
-
-/**
- * Check user ID from serial.
- * @param {string} serial 
- * @param {object} _dir 
- * @returns {string}
- */
-const getRegisteredIdFromSerial = (serial, _dir) => {
-    let position = null
-    Object.keys(_dir).forEach((i) => {
-        if (_dir[i].serial === serial) {
-            position = i
-        }
-    })
-    if (position !== null) {
-        return _dir[position].id
-    }
-}
-
-/**
- * Get random user ID.
- * @param {object} _dir 
- * @returns {string}
- */
-const getRegisteredRandomId = (_dir) => {
-    return _dir[Math.floor(Math.random() * _dir.length)].id
+    return _registered[position].id
 }
 
 module.exports = {
     addRegisteredUser,
     checkRegisteredUser,
+    createSerial,
     checkRegisteredUserFromSerial,
     getRegisteredNameFromSerial,
     getRegisteredAgeFromSerial,
     getRegisteredTimeFromSerial,
     getRegisteredIdFromSerial,
     getRegisteredRandomId,
-    getRegisteredUserId
 }
