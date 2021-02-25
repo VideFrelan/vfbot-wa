@@ -89,12 +89,24 @@ Edit file penting yg berada di 'config.json'
 | Instagram TV        |      ✔️      |
 | Play MP3            |      ✔️      |
 
+|      Education      | Availability |
+| :-----------------: | :----------: |
+| Wikipedia ID        |      ✔️      |
+| Wikipedia EN        |      ✔️      |
+| Covid Indo          |      ✔️      |
+| KBBI                |      ✔️      |
+
 |       Fun        | Availability |
 | :--------------: | :----------: |
 | SimSimi          |      ✔️      |
 | Balik Huruf      |      ✔️      |
 | Hitung Huruf     |      ✔️      |
 | Hilih Teks       |      ✔️      |
+
+|       Random     | Availability |
+| :--------------: | :----------: |
+| Quotes           |      ✔️      |
+| Fakta Unik       |      ✔️      |
 
 |      Stalker       | Availability |
 | :----------------: | :----------: |
