@@ -3,7 +3,7 @@ const { decryptMedia, vf } = require('@open-wa/wa-automate')
 const { color, msgFilter, processTime, isUrl} = require('./function')
 const { register } = require('./data/')
 const { msg } = require('./msg')
-const { downloader, stalker, fun, spammer } = require('./lib')
+const { downloader, stalker, fun, spammer, education } = require('./lib')
 const config = require('./config.json')
 const fs = require('fs-extra')
 const fetch = require('node-fetch')
@@ -78,7 +78,20 @@ module.exports = handler = async (vf = new vf(), message) => {
             case 'antiporn'://PREMIUM
                 await vf.reply(from, 'Premium feature!\nContact: wa.me/6285692655520', id)
             break
-            /*STICKER MAKER*/
+            /* RANDOM WORDS */
+            case 'fakta':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                const datafakta = await axios.get(`https://videfikri.com/api/fakta/`)
+                const fakta = datafakta.data.result
+                await vf.reply(from, `${fakta.fakta}`, id)
+            break
+            case 'quotes':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                const dataquotes = await axios.get(`https://videfikri.com/api/randomquotes/`)
+                const quotes = dataquotes.data.result
+                await vf.reply(from, `➸ *Author*: ${quotes.author}\n➸ *Quotes*: ${quotes.quotes}`, id)
+            break
+            /* STICKER MAKER */
             case 'takestick':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                     if (quotedMsg && quotedMsg.type == 'sticker') {
@@ -211,9 +224,9 @@ module.exports = handler = async (vf = new vf(), message) => {
                     await vf.reply(from, `Untuk mengconvert GIF/Video menjadi stikergif silahkan upload video/gif dengan caption ${prefix}stikergif`, id)
                 }
             break
-            /*END OF STICKER MAKER*/
+            /* END OF STICKER MAKER */
 
-            /*DOWNLOADER*/
+            /* DOWNLOADER */
             case 'play':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk memutar musik dari YouTube\ngunakan ${prefix}play judul_lagu\n\nContoh: ${prefix}play martin garrix`, id)
@@ -287,9 +300,9 @@ module.exports = handler = async (vf = new vf(), message) => {
                         await vf.reply(from, 'Error!', id)
                     })
                 break
-                /*END OF DOWNLOADER*/
+                /* END OF DOWNLOADER */
 
-                /*STALKER*/
+                /* STALKER */
                 case 'igstalk':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Format salah!\nuntuk meng-stalk akun Instagram seseorang, gunakan ${prefix}stalkig username\n\nContoh: ${prefix}stalkig videfikri`, id)
@@ -332,9 +345,9 @@ module.exports = handler = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 })
             break
-            /*END OF STALKER*/
+            /* END OF STALKER */
 
-            /* FUN MENU*/
+            /* FUN MENU */
             case 'simi':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Gunakan ${prefix}simi teks`, id)
@@ -385,7 +398,7 @@ module.exports = handler = async (vf = new vf(), message) => {
             break
             /* END OF FUN MENU */
             
-            /*SPAMMER*/
+            /* SPAMMER */
             case 'email':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query.includes('|')) return await vf.reply(from, `Untuk mengirim email kepada seseorang\ngunakan ${prefix}email target | subjek | pesan`, id)
@@ -413,6 +426,61 @@ module.exports = handler = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 })
             break
+            /* END OF SPAMMER */
+
+            /* EDUCATION */
+            case 'covidindo':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                await vf.reply(from, msg.wait(), id)
+                .then(async ({result}) => {
+                    await vf.reply(from, `➸ *Negara*: ${result.country}\n➸ *Positif*: ${result.positif}\n➸ *Negatif*: ${result.negatif}\n➸ *Meninggal*: ${result.meinggal}\n➸ *Sembuh*: ${result.sembuh}\n➸ *Dalam Perawatan*: ${result.dalam_perawatan}`, id)
+                })
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                })
+            break
+            case 'kbbi':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query) return await vf.reply(from, `Untuk mencari kata KBBI\ngunakan ${prefix}kbbi query\n\nContoh: ${prefix}kbbi manusia`, id)
+                await vf.reply(from, msg.wait(), id)
+                education.kbbi(query)
+                .then(async ({result}) => {
+                    await vf.reply(from, `➸ *Judul*: ${result.judul}\n➸ *PageID*: ${result.pageid}\n➸ *Isi Konten*: ${result.isi_konten}`, id)
+                })
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                })
+            break
+            case 'wiki':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query) return await vf.reply(from, `Untuk mencari Wikipedia\ngunakan ${prefix}wiki query\n\nContoh: ${prefix}wiki indonesia`, id)
+                await vf.reply(from, msg.wait(), id)
+                education.wikipedia(query)
+                .then(async ({result}) => {
+                    await vf.reply(from, `➸ *Judul*: ${result.judul}\n➸ *PageID*: ${result.pageid}\n➸ *Isi Konten*: ${result.isi_konten}`, id)
+                })
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                })
+            break
+            case 'wikien':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query) return await vf.reply(from, `Untuk mencari Wikipedia bahasa inggris\ngunakan ${prefix}wikien query\n\nContoh: ${prefix}wikien indonesia`, id)
+                await vf.reply(from, msg.wait(), id)
+                education.wikipediaen(query)
+                .then(async ({result}) => {
+                    await vf.reply(from, `➸ *Title*: ${result.judul}\n➸ *PageID*: ${result.pageid}\n➸ *Content*: ${result.desc}`, id)
+                })
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                })
+            break
+            /* END OF EDUCATION */
+
             /* OTHERS */
             case 'emot':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
