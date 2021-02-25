@@ -416,7 +416,7 @@ module.exports = handler = async (vf = new vf(), message) => {
             /* OTHERS */
             case 'emot':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
-                if (!query) return await vf.reply(from, `Format salah!\nuntuk meng-stalk akun Github\ngunakan ${prefix}github username`, id)
+                if (!query) return await vf.reply(from, `Format salah!\nuntuk convert emoji to sticker\ngunakan ${prefix}emot emoji_nya`, id)
                 try {
                 await vf.reply(from, msg.wait(), id)
                 const emoji = emojiUnicode(query)
