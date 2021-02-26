@@ -26,6 +26,7 @@ module.exports = handler = async (vf = new vf(), message) => {
         const chats = (type === 'chat') ? body : ((type === 'image' || type === 'video')) ? caption : ''
         const command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
         const args = body.trim().split(/ +/).slice(1)
+        const ar = args.map((v) => v.toLowerCase())
         const query = args.join(' ')
         const url = args.length !== 0 ? args[0] : ''
         const now = moment(t * 1000).format('DD/MM/YYYY HH:mm:ss')
@@ -33,9 +34,18 @@ module.exports = handler = async (vf = new vf(), message) => {
         const groupId = isGroupMsg ? chat.groupMetadata.id : ''
         /*=_=_=_=_=_=_=_=_=_=_=_=_=_ END OF MESSAGE HANDLER =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=*/
 
-        /*=_=_=_=_=_=_=_=_=_=_=_=_=_ VALIDATOR =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=*/
+        /*=_=_=_=_=_=_=_=_=_=_=_=_=_ DATABASES =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=*/
         const _registered = JSON.parse(fs.readFileSync('./database/registered.json'))
-        const ownerBot = config.owner
+        const _antilink = JSON.parse(fs.readFileSync('./database//antilink.json'))
+        const _antivirtext = JSON.parse(fs.readFileSync('./database/antivirtext.json'))
+        /*=_=_=_=_=_=_=_=_=_=_=_=_=_ END OF DATABASES =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=*/
+
+        /*=_=_=_=_=_=_=_=_=_=_=_=_=_ VALIDATOR =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=*/
+        const botNumber = await vf.getHostNumber() + '@c.us'
+        const groupAdmins = isGroupMsg ? await vf.getGroupAdmins(groupId) : ''
+        const isGroupAdmins = groupAdmins.includes(sender.id) || false
+        const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
+        const _registered = JSON.parse(fs.readFileSync('./database/registered.json'))
         const isCmd = body.startsWith(prefix)
         const isOwner = sender.id === owner
         const isRegistered = register.checkRegisteredUser(sender.id, _registered)
@@ -44,13 +54,26 @@ module.exports = handler = async (vf = new vf(), message) => {
         const isQuotedImage = quotedMsg && quotedMsg.type === 'image'
         const isQuotedVideo = quotedMsg && quotedMsg.type === 'video'
         const isQuotedGif = quotedMsg && quotedMsg.mimetype === 'image/gif'
+        const isDetectorOn = isGroupMsg ? _antilink.includes(chat.id) : false
+        const isAntiVirtextOn = isGroupMsg ? _antivirtext.includes(chat.id) : false
         /*=_=_=_=_=_=_=_=_=_=_=_=_=_ END OF VALIDATOR =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=*/
 
+        //ANTI-GROUP LINK DETECTOR
+        if (isGroupMsg && !isGroupAdmins && isBotGroupAdmins && isDetectorOn && !isOwner) {
+            if (chats.match(new RegExp(/(https:\/\/chat.whatsapp.com)/gi))) {
+                console.log(color('[KICK]', 'red'), color('Anti Group-Link detector.', 'aqua'))
+                await vf.reply(from, msg.linkDetected(), id)
+                await vf.removeParticipant(groupId, sender.id)
+            }
+        }
+
         // ANTI-VIRTEXT
+        if (isGroupMsg && isBotGroupAdmins && !isOwner) {
         if (chats.length > 5000) {
             await vf.sendTextWithMentions(from, `Terdeteksi @${sender.id} telah mengirim Virtext\nAkan dikeluarkan dari group!`)
             await vf.removeParticipant(groupId, sender.id)
         }
+    }
 
         // Anti-spam
         if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg) return console.log(color('[SPAM]', 'red'), color(time, 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
@@ -480,6 +503,43 @@ module.exports = handler = async (vf = new vf(), message) => {
                 })
             break
             /* END OF EDUCATION */
+
+            /* MODERATIOR CMDS */
+            case 'antilink':
+                if (!isGroupMsg) return await vf.reply(from, msg.groupOnly(), id)
+                if (!isGroupAdmins) return await vf.reply(from, msg.adminOnly(), id)
+                if (!isBotGroupAdmins) return await vf.reply(from, msg.botNotAdmin(), id)
+                if (ar[0] === 'on') {
+                    if (isDetectorOn) return await vf.reply(from, `Gagal, Anti group-link sudah pernah di nyalakan sebelumnya`, id)
+                    _antilink.push(groupId)
+                    fs.writeFileSync('./database/antilink.json', JSON.stringify(_antilink))
+                    await vf.reply(from, `*...:* *ANTI GROUP LINK*\n\nPerhatian untuk member grup ${(name || formattedTitle)}\nGroup ini telah dipasang anti-link, jika anda mengirim link group lain, maka akan otomatis terkick!`, id)
+                } else if (ar[0] === 'off') {
+                    _antilink.splice(groupId, 1)
+                    fs.writeFileSync('./database/antilink.json', JSON.stringify(_antilink))
+                    await vf.reply(from, `Berhasil menonaktifkan anti-link`, id)
+                } else {
+                    await vf.reply(from, `Untuk melindungi grup ini dari link grup lain\nketik ${prefix}antilink on --enable\n${prefix}antilink off --disable`, id)
+                }
+            break
+            case 'antivirtext':
+                if (!isGroupMsg) return await vf.reply(from, msg.groupOnly(), id)
+                if (!isGroupAdmins) return await vf.reply(from, msg.adminOnly(), id)
+                if (!isBotGroupAdmins) return await vf.reply(from, msg.botNotAdmin(), id)
+                if (ar[0] === 'on') {
+                    if (isAntiVirtextOn) return await vf.reply(from, `Gagal, Anti Virtext sudah pernah dinyalakan sebelumnya`, id)
+                    _antivirtext.push(groupId)
+                    fs.writeFileSync('./database/antivirtext.json', JSON.stringify(_antivirtext))
+                    await vf.reply(from, `*...:* *ANTI VIRTEXT*\n\nPerhatian untuk member grup ${(name || formattedTitle)}\nGroup ini telah dipasang anti virtext, jika anda mengirim virtext, maka akan otomatis terkick!`, id)
+                } else if (ar[0] === 'off') {
+                    _antivirtext.splice(groupId, 1)
+                    fs.writeFileSync('./database/antivirtext.json', JSON.stringify(_antivirtext))
+                    await vf.reply(from, `Berhasil menonaktifkan anti-virtext`, id)
+                } else {
+                    await vf.reply(from, `Untuk melindungi grup ini dari virtext\nketik ${prefix}antivirtext on --enable\n${prefix}antivirtext off --disable`, id)
+                }
+            break
+            /* END OF MODERATION CMDS */
 
             /* OTHERS */
             case 'emot':
