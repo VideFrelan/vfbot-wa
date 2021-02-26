@@ -61,10 +61,22 @@ exports.menu = (pushname) => {
 ╠☞ *${prefix}balikhuruf*
 ╠☞ *${prefix}hitunghuruf*
 ║
+╠══★〘 EDUCATION 〙★══
+║
+╠☞ *${prefix}wiki*
+╠☞ *${prefix}wikien*
+╠☞ *${prefix}kbbi*
+╠☞ *${prefix}covidindo*
+║
 ╠══★〘 SPAMMER 〙★══
 ║
 ╠☞ *${prefix}email*
 ╠☞ *${prefix}call*
+║
+╠══★〘 RANDOM 〙★══
+║
+╠☞ *${prefix}fakta*
+╠☞ *${prefix}quotes*
 ║
 ║══★〘 VIDE FIKRI BOT 〙★══
 `
