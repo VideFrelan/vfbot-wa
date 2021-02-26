@@ -122,6 +122,7 @@ Edit file penting yg berada di 'config.json'
 |   Group Security   | Availability |
 | :----------------: | :----------: |
 | Anti Virtext      |      ✔️      |
+| Anti Group Link   |      ✔️      |
 | Anti Porn         |    PREMIUM    |
 
 # 📝 To-do
