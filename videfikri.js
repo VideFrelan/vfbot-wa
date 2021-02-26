@@ -554,9 +554,17 @@ module.exports = handler = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 }
             break
+            /* END OF OTHERS */
+
+            case 'menuadmin':
+                if (isGroupMsg && isGroupAdmins) {
+                await vf.reply(from, msg.menuAdmin(), id)
+                }
+            break
             case 'menu':
             case 'help':
                 await vf.reply(from, msg.menu(pushname), id)
+                .then(() => ((isGroupMsg) && (isGroupAdmins)) ? vf.sendText(from, `Menu Admin Grup: *${prefix}menuadmin*`) : null)
             break
         }
     } catch (err) {
