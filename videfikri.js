@@ -45,7 +45,6 @@ module.exports = handler = async (vf = new vf(), message) => {
         const groupAdmins = isGroupMsg ? await vf.getGroupAdmins(groupId) : ''
         const isGroupAdmins = groupAdmins.includes(sender.id) || false
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
-        const _registered = JSON.parse(fs.readFileSync('./database/registered.json'))
         const isCmd = body.startsWith(prefix)
         const isOwner = sender.id === owner
         const isRegistered = register.checkRegisteredUser(sender.id, _registered)
