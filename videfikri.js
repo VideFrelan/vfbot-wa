@@ -263,10 +263,10 @@ module.exports = handler = async (vf = new vf(), message) => {
                         await vf.sendFileFromUrl(from, thumbnail, 'thumbnail.jpg', `➸ *Judul*: ${title}\n➸ *Channel*: ${channel}\n➸ *ID*: ${id}\n➸ *Views*: ${views}\n➸ *Duration*: ${duration}\n➸ *Size*: ${size}\n➸ *Published On*: ${published_on}\n➸ *Description*: ${description}`, id)
                         const downl = await fetch(url);
                         const buffer = await downl.buffer(); 
-                        await fs.writeFile(`./temp/audio/${sender.id}.mp3`, buffer)
-                        await vf.sendFile(from, `./temp/audio/${sender.id}.mp3`, 'audio.mp3', '', id)
+                        await fs.writeFile(`./temp/${sender.id}.mp3`, buffer)
+                        await vf.sendFile(from, `./temp/${sender.id}.mp3`, 'audio.mp3', '', id)
                         console.log('Success sending Play MP3!')
-                        fs.unlinkSync(`./temp/audio/${sender.id}.mp3`)
+                        fs.unlinkSync(`./temp/${sender.id}.mp3`)
                     }
                 }) 
                 .catch(async (err) => {
