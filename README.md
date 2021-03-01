@@ -119,6 +119,13 @@ Edit file penting yg berada di 'config.json'
 | Email              |      ✔️      |
 | Call               |      ✔️      |
 
+|      OTHERS        | Availability |
+| :----------------: | :----------: |
+| NPM Info           |      ✔️      |
+| IP Lookup          |      ✔️      |
+| Random Nekonime    |      ✔️      |
+| Chord Guitar       |      ✔️      |
+
 |   Group Security   | Availability |
 | :----------------: | :----------: |
 | Anti Virtext      |      ✔️      |
