@@ -1,11 +1,10 @@
 /* eslint-disable no-case-declarations */
-const { decryptMedia, vf } = require('@open-wa/wa-automate')
+const { decryptMedia } = require('@open-wa/wa-automate')
 const { color, msgFilter, processTime, isUrl} = require('./function')
 const { register } = require('./data/')
 const { msg } = require('./msg')
 const { downloader, stalker, fun, spammer, education } = require('./lib')
 const config = require('./config.json')
-const axios = require('axios')
 const fs = require('fs-extra')
 const fetch = require('node-fetch')
 const emojiUnicode = require('emoji-unicode')
@@ -46,6 +45,7 @@ module.exports = handler = async (vf = new vf(), message) => {
         const groupAdmins = isGroupMsg ? await vf.getGroupAdmins(groupId) : ''
         const isGroupAdmins = groupAdmins.includes(sender.id) || false
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
+        const _registered = JSON.parse(fs.readFileSync('./database/registered.json'))
         const isCmd = body.startsWith(prefix)
         const isOwner = sender.id === owner
         const isRegistered = register.checkRegisteredUser(sender.id, _registered)
@@ -250,33 +250,10 @@ module.exports = handler = async (vf = new vf(), message) => {
             /* END OF STICKER MAKER */
 
             /* DOWNLOADER */
-            case 'play':
-                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
-                if (!query) return await vf.reply(from, `Untuk memutar musik dari YouTube\ngunakan ${prefix}play judul_lagu\n\nContoh: ${prefix}play martin garrix`, id)
-                await vf.reply(from, msg.wait(), id)
-                downloader.ytPlay(query)
-                .then(async ({result}) => {
-                    const { title, channel, duration, id, thumbnail, views, size, url, description, published_on } = await result
-                    if (Number(size.split('MB')[0]) >= 20.00) {
-                        await vf.sendFileFromUrl(from, thumbnail, 'thumbnail.jpg', `➸ *Judul*: ${title}\n➸ *ID*: ${id}\n➸ *Size*: ${size}\n\nGagal, maksimal size adalah *20MB*!\nSilahkan download sendiri melalui URL dibawah:\n${url}`, id)
-                    } else {
-                        await vf.sendFileFromUrl(from, thumbnail, 'thumbnail.jpg', `➸ *Judul*: ${title}\n➸ *Channel*: ${channel}\n➸ *ID*: ${id}\n➸ *Views*: ${views}\n➸ *Duration*: ${duration}\n➸ *Size*: ${size}\n➸ *Published On*: ${published_on}\n➸ *Description*: ${description}`, id)
-                        const downl = await fetch(url);
-                        const buffer = await downl.buffer(); 
-                        await fs.writeFile(`./temp/${sender.id}.mp3`, buffer)
-                        await vf.sendFile(from, `./temp/${sender.id}.mp3`, 'audio.mp3', '', id)
-                        console.log('Success sending Play MP3!')
-                        fs.unlinkSync(`./temp/${sender.id}.mp3`)
-                    }
-                }) 
-                .catch(async (err) => {
-                    console.error(err)
-                    await vf.reply(from, 'Error!', id)
-                })
-                break
                 case 'igtv':
                     if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                     if (!query) return await vf.reply(from, `Format salah!\nuntuk mendownload Instagram TV\ngunakan ${prefix}igtv link_igtv`, id)
+                    if (!isUrl(url) && !url.includes('instagram.com')) return await vf.reply(from, `Format salah!\nURL bukan dari instagram.com`, id)
                     await vf.reply(from, msg.wait(), id)
                     downloader.igtv(query)
                     .then(async ({result}) => {
@@ -325,6 +302,45 @@ module.exports = handler = async (vf = new vf(), message) => {
                 break
                 /* END OF DOWNLOADER */
 
+                /* MUSIC */
+                case 'play':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query) return await vf.reply(from, `Untuk memutar musik dari YouTube\ngunakan ${prefix}play judul_lagu\n\nContoh: ${prefix}play martin garrix`, id)
+                await vf.reply(from, msg.wait(), id)
+                downloader.ytPlay(query)
+                .then(async ({result}) => {
+                    const { title, channel, duration, id, thumbnail, views, size, url, description, published_on } = await result
+                    if (Number(size.split('MB')[0]) >= 20.00) {
+                        await vf.sendFileFromUrl(from, thumbnail, 'thumbnail.jpg', `➸ *Judul*: ${title}\n➸ *ID*: ${id}\n➸ *Size*: ${size}\n\nGagal, maksimal size adalah *20MB*!\nSilahkan download sendiri melalui URL dibawah:\n${url}`, id)
+                    } else {
+                        await vf.sendFileFromUrl(from, thumbnail, 'thumbnail.jpg', `➸ *Judul*: ${title}\n➸ *Channel*: ${channel}\n➸ *ID*: ${id}\n➸ *Views*: ${views}\n➸ *Duration*: ${duration}\n➸ *Size*: ${size}\n➸ *Published On*: ${published_on}\n➸ *Description*: ${description}`, id)
+                        const downl = await fetch(url);
+                        const buffer = await downl.buffer(); 
+                        await fs.writeFile(`./temp/audio/${sender.id}.mp3`, buffer)
+                        await vf.sendFile(from, `./temp/audio/${sender.id}.mp3`, 'audio.mp3', '', id)
+                        console.log('Success sending Play MP3!')
+                        fs.unlinkSync(`./temp/audio/${sender.id}.mp3`)
+                    }
+                }) 
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                })
+                break
+                case 'chord':
+                    if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                    if (!query) return await vf.reply(from, `Untuk mencari chord sebuah lagu\ngunakan ${prefix}chord judul_lagu`, id)
+                    await vf.reply(from, msg.wait(), id)
+                    try {
+                    const datachord = await axios.get(`https://videfikri.com/api/chord/?query=${query}`)
+                    const chord = datachord.data.result
+                    await vf.reply(from, `➸ *Title*: ${chord.title}\n➸ *Chord*: ${chord.chord}`, id)
+                    break
+            } catch (err) {
+                console.error(err)
+                await vf.reply(from, 'Error!', id)
+            }
+                break
                 /* STALKER */
                 case 'igstalk':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
@@ -541,6 +557,19 @@ module.exports = handler = async (vf = new vf(), message) => {
             break
             /* END OF MODERATION CMDS */
 
+            /* ANIME */
+            case 'nekonime':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                try {
+                    await vf.reply(from, msg.wait(), id)
+                    const dataneko = await axios.get(`https://videfikri.com/api/anime/neko`)
+                    const nekonime = dataneko.data.result
+                    await vf.sendFileFromUrl(from, nekonime.url_gbr, 'nekonime.jpg', '', id)
+                } catch (err) {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                }
+            break
             /* OTHERS */
             case 'emot':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
@@ -554,8 +583,34 @@ module.exports = handler = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 }
             break
+            case 'npm':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query) return await vf.reply(from, `Format salah!\ngunakan ${prefix}npm package_name`, id)
+                try {
+                    await vf.reply(from, msg.wait(), id)
+                    const datanpm = await axios.get(`https://videfikri.com/api/npm/?query=${query}`)
+                    const npm = datanpm.data.result
+                    await vf.reply(from, `➸ *ID*: ${npm.id}\n➸ *Package Name*: ${npm.name}\n➸ *REV*: ${npm.rev}\n➸ *Version Latest*: ${npm.version_latest}\n➸ *Description*: ${npm.description}\n➸ *Homepage*: ${npm.homepage}\n➸ *Author Name*: ${npm.author_name}\n➸ *License*: ${npm.license}\n➸ *Maintainer*: ${npm.maintainer}\n➸ *Email*: ${npm.email}\n➸ *Created At*: ${npm.created_at}\n➸ *Last Modified*: ${npm.last_modified}`, id)
+                } catch (err) {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                }
+            break
+            case 'ip':
+            case 'iplookup':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query) return await vf.reply(from, `Untuk melihat rincian IP Address\ngunakan ${prefix}ip ip_address`, id)
+                try {
+                    await vf.reply(from, msg.wait(), id)
+                    const dataip = await axios.get(`https://videfikri.com/api/iplookup/?ip=${query}`)
+                    const iplookup = dataip.data.result
+                    await vf.reply(from, `➸ *IP*: ${iplookup.ip}\n➸ *Country*: ${iplookup.country}\n➸ *Country Code*: ${iplookup.country_code}\n➸ *Region*: ${iplookup.region}\n➸ *Region Name*: ${iplookup.region_name}\n➸ *City*: ${iplookup.city}\n➸ *ZIP*: ${iplookup.zip}\n➸ *Latitude*: ${iplookup.latitude}\n➸ *Longtitude*: ${iplookup.longtitude}\n➸ *Timezone*: ${iplookup.timezone}\n➸ *ISP*: ${iplookup.isp}\n➸ *ORG*: ${iplookup.org}\n➸ *AS*: ${iplookup.as}`, id)
+                } catch (err) {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                }
+            break
             /* END OF OTHERS */
-
             case 'menuadmin':
                 if (isGroupMsg && isGroupAdmins) {
                 await vf.reply(from, msg.menuAdmin(), id)
