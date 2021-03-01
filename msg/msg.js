@@ -78,6 +78,13 @@ exports.menu = (pushname) => {
 ╠☞ *${prefix}fakta*
 ╠☞ *${prefix}quotes*
 ║
+╠══★〘 OTHERS 〙★══
+║
+╠☞ *${prefix}npm*
+╠☞ *${prefix}ip*
+╠☞ *${prefix}nekonime*
+╠☞ *${prefix}chord*
+║
 ║══★〘 VIDE FIKRI BOT 〙★══
 `
 }
