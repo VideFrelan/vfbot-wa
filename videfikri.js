@@ -16,7 +16,7 @@ moment.tz.setDefault('Asia/Jakarta').locale('id')
          /*=_=_=_=_=_=_=_=_=_=_=_=_=_ MESSAGE HANDLER =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=*/
 module.exports = handler = async (vf = new vf(), message) => {
     try {
-        const { from, id, type, caption, chat, t, sender, isGroupMsg, isMedia, mimetype, quotedMsg, quotedMsgObj } = message
+        const { from, id, type, caption, chat, t, sender, isGroupMsg, isMedia, mimetype, quotedMsg } = message
         let { body } = message
         const { owner, prefix } = config
         const { name, formattedTitle } = chat
