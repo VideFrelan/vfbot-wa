@@ -36,6 +36,7 @@ exports.menu = (pushname) => {
 ╔══★〘 DOWNLOADER 〙★══
 ║
 ╠☞ *${prefix}igtv*
+╠☞ *${prefix}igdl*
 ╠☞ *${prefix}play*
 ╠☞ *${prefix}ytmp3*
 ╠☞ *${prefix}ytmp4*
@@ -84,6 +85,11 @@ exports.menu = (pushname) => {
 ╠☞ *${prefix}quotes*
 ╠☞ *${prefix}nekonime*
 ╠☞ *${prefix}animequotes*
+║
+╠══★〘 OTHERS 〙★══
+║
+╠☞ *${prefix}npm*
+╠☞ *${prefix}ip*
 ║
 ║══★〘 VIDE FIKRI BOT 〙★══
 `
