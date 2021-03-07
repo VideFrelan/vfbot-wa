@@ -256,14 +256,14 @@ module.exports = handler = async (vf = new vf(), message) => {
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk mendownload Instagram Post seseorang\ngunakan ${prefix}igdl link_post`, id)
                 await vf.reply(from, msg.wait(), id)
-                    misc.insta(q)
+                    downloader.insta(query)
                     .then(async ({ result }) => {
                         if (result.type_post == 'video') {
                             const { full_name, username, caption, like, comment, thumb, video, duration } = await result
                             await vf.sendFileFromUrl(from, video, 'igdlVFBOT.mp4', `➸ *Username*: ${username}\n➸ *Full Name*: ${full_name}\n➸ *Caption*: ${caption}\n➸ *Likes*: ${like}\n➸ *Comment*: ${comment}\n➸ *Duration*: ${duration}\n\n➸ *URL THUMB*: ${thumb}`, id)
                         } else if (result.type_post == 'image') {
                             const { fullname, username, img_url, height_width, caption, comment, likes, image_text } = await result
-                            await vf.sendFileFromUrl(from, img_url, 'igDlVFBOT.jpg', `➸ *Username*: ${username}\n➸ *Full Name*: ${full_name}\n➸ *Height Width*: ${height_width}\n➸ *Caption*: ${caption}\n➸ *Comment*: ${comment}\n➸ *Likes*: ${likes}\n➸ *Image Prediction*: ${image_text}`, id)
+                            await vf.sendFileFromUrl(from, img_url, 'igDlVFBOT.jpg', `➸ *Username*: ${username}\n➸ *Full Name*: ${fullname}\n➸ *Height Width*: ${height_width}\n➸ *Caption*: ${caption}\n➸ *Comment*: ${comment}\n➸ *Likes*: ${likes}\n➸ *Image Prediction*: ${image_text}`, id)
                         }
                         console.log('Success sending Instagram media!')
                     })
