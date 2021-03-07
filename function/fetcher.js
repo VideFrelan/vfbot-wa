@@ -49,14 +49,15 @@ const toBuffer = (url, options) => {
 /**
  * Upload images to telegra.ph server.
  * @param {Buffer} buffData 
- * @param {String} fileName
+ * @param {string} fileName
+ * @returns {Promise<string>}
  */
 const uploadImages = (buffData, fileName) => {
     return new Promise(async (resolve, reject) => {
         const { ext } = await fromBuffer(buffData)
         const filePath = `temp/${fileName}.${ext}`
         fs.writeFile(filePath, buffData, { encoding: 'base64' }, (err) => {
-            if (err) return reject(err)
+            if (err) reject(err)
             console.log('Uploading image to telegra.ph server...')
             const fileData = fs.readFileSync(filePath)
             const form = new FormData()
@@ -67,7 +68,7 @@ const uploadImages = (buffData, fileName) => {
             })
                 .then((response) => response.json())
                 .then((result) => {
-                    if (result.error) return reject(result.error)
+                    if (result.error) reject(result.error)
                     resolve('https://telegra.ph' + result[0].src)
                 })
                 .then(() => fs.unlinkSync(filePath))
@@ -75,6 +76,7 @@ const uploadImages = (buffData, fileName) => {
         })
     })
 }
+
 
 module.exports = {
     fetchJson,
