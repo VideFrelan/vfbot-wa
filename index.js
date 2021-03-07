@@ -1,6 +1,6 @@
 const { create } = require('@open-wa/wa-automate')
 const { color, options } = require('./function')
-const fs = require('fs-extra')
+//const fs = require('fs-extra')
 const videfikri = require('./videfikri.js')
 const config = require('./config.json')
 const ownerNumber = config.owner
