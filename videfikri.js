@@ -14,7 +14,7 @@ moment.tz.setDefault('Asia/Jakarta').locale('id')
 
 // eslint-disable-next-line no-undef
          /*=_=_=_=_=_=_=_=_=_=_=_=_=_ MESSAGE HANDLER =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=*/
-module.exports = handler = async (vf = new vf(), message) => {
+module.exports = videfikri = async (vf = new vf(), message) => {
     try {
         const { from, id, type, caption, chat, t, sender, isGroupMsg, isMedia, mimetype, quotedMsg } = message
         let { body } = message
