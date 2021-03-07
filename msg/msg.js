@@ -68,6 +68,11 @@ exports.menu = (pushname) => {
 ╠☞ *${prefix}kbbi*
 ╠☞ *${prefix}covidindo*
 ║
+╠══★〘 MUSIC 〙★══
+║
+╠☞ *${prefix}chord*
+╠☞ *${prefix}lirik*
+║
 ╠══★〘 SPAMMER 〙★══
 ║
 ╠☞ *${prefix}email*
@@ -77,13 +82,8 @@ exports.menu = (pushname) => {
 ║
 ╠☞ *${prefix}fakta*
 ╠☞ *${prefix}quotes*
-║
-╠══★〘 OTHERS 〙★══
-║
-╠☞ *${prefix}npm*
-╠☞ *${prefix}ip*
 ╠☞ *${prefix}nekonime*
-╠☞ *${prefix}chord*
+╠☞ *${prefix}animequotes*
 ║
 ║══★〘 VIDE FIKRI BOT 〙★══
 `
