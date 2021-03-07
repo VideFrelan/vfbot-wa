@@ -87,6 +87,7 @@ Edit file penting yg berada di 'config.json'
 | YT to MP3           |      ✔️      |
 | YT to MP4           |      ✔️      |
 | Instagram TV        |      ✔️      |
+| IG Video & Photo    |      ✔️      |
 | Play MP3            |      ✔️      |
 
 |      Education      | Availability |
@@ -125,12 +126,15 @@ Edit file penting yg berada di 'config.json'
 | IP Lookup          |      ✔️      |
 | Random Nekonime    |      ✔️      |
 | Chord Guitar       |      ✔️      |
+| Lirik Lagu         |      ✔️      |
+| Random Quotes Anime|      ✔️      |
+| Random Nekonime    |      ✔️      |
 
 |   Group Security   | Availability |
 | :----------------: | :----------: |
-| Anti Virtext      |      ✔️      |
-| Anti Group Link   |      ✔️      |
-| Anti Porn         |    PREMIUM    |
+| Anti Virtext       |      ✔️      |
+| Anti Group Link    |      ✔️      |
+| Anti Porn          |    PREMIUM    |
 
 # 📝 To-do
 * Menambahkan lebih banyak fitur dari [VideFikri API's](https://videfikri.com/api).
