@@ -1,5 +1,4 @@
 /* eslint-disable no-case-declarations */
-/* eslint-disable no-case-declarations */
 const { decryptMedia } = require('@open-wa/wa-automate')
 const { color, msgFilter, processTime, isUrl} = require('./function')
 const { register } = require('./data/')
@@ -255,6 +254,7 @@ module.exports = handler = async (vf = new vf(), message) => {
             case 'ig':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk mendownload Instagram Post seseorang\ngunakan ${prefix}igdl link_post`, id)
+                if (!isUrl(url) && !url.includes('instagram.com')) return await vf.reply(from, 'Perhatikan! URL harus dari instagram', id)
                 await vf.reply(from, msg.wait(), id)
                     downloader.insta(query)
                     .then(async ({ result }) => {
@@ -299,6 +299,7 @@ module.exports = handler = async (vf = new vf(), message) => {
                 case 'igtv':
                     if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                     if (!query) return await vf.reply(from, `Format salah!\nuntuk mendownload Instagram TV\ngunakan ${prefix}igtv link_igtv`, id)
+                    if (!isUrl(url) && !url.includes('instagram.com')) return await vf.reply(from, 'Perhatikan! URL harus dari instagram', id)
                     await vf.reply(from, msg.wait(), id)
                     downloader.igtv(query)
                     .then(async ({result}) => {
