@@ -5,8 +5,9 @@ const FormData = require('form-data')
 
 /**
  * Fetch JSON from URL.
- * @param {String} url 
- * @param {Object} options 
+ * @param {string} url 
+ * @param {object} [options]
+ * @returns {Promise<object>} 
  */
 const fetchJson = (url, options) => {
     return new Promise((resolve, reject) => {
@@ -19,8 +20,9 @@ const fetchJson = (url, options) => {
 
 /**
  * Fetch text from URL.
- * @param {String} url 
- * @param {Object} options 
+ * @param {string} url 
+ * @param {object} [options]
+ * @returns {Promise<string>}
  */
 const fetchText = (url, options) => {
     return new Promise((resolve, reject) => {
@@ -32,16 +34,16 @@ const fetchText = (url, options) => {
 }
 
 /**
- * Convert media to buffer.
- * @param {String} url 
- * @param {Object} options
- * @returns {Buffer}
+ * Get buffer from direct media.
+ * @param {string} url 
+ * @param {object} [options]
+ * @returns {Promise<Buffer>}
  */
-const toBuffer = (url, options) => {
+const fetchBuffer = (url, options) => {
     return new Promise((resolve, reject) => {
         return fetch(url, options)
             .then((response) => response.buffer())
-            .then((buffer) => resolve(buffer))
+            .then((result) => resolve(result))
             .catch((err) => reject(err))
     })
 }
@@ -77,10 +79,9 @@ const uploadImages = (buffData, fileName) => {
     })
 }
 
-
 module.exports = {
     fetchJson,
     fetchText,
-    uploadImages,
-    toBuffer
+    fetchBuffer,
+    uploadImages
 }
