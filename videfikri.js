@@ -1,5 +1,7 @@
 /* eslint-disable no-case-declarations */
-const { decryptMedia } = require('@open-wa/wa-automate')
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-irregular-whitespace */
+const { decryptMedia, vf } = require('@open-wa/wa-automate')
 const { color, msgFilter, processTime, isUrl} = require('./function')
 const { register } = require('./data/')
 const { msg } = require('./msg')
