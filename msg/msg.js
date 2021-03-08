@@ -68,6 +68,8 @@ exports.menu = (pushname) => {
 ╠☞ *${prefix}wikien*
 ╠☞ *${prefix}kbbi*
 ╠☞ *${prefix}covidindo*
+╠☞ *${prefix}randomquran*
+╠☞ *${prefix}kisahnabi*
 ║
 ╠══★〘 MUSIC 〙★══
 ║
@@ -90,6 +92,9 @@ exports.menu = (pushname) => {
 ║
 ╠☞ *${prefix}npm*
 ╠☞ *${prefix}ip*
+╠☞ *${prefix}filmapik*
+╠☞ *${prefix}kodepos*
+╠☞ *${prefix}nulis*
 ║
 ║══★〘 VIDE FIKRI BOT 〙★══
 `
