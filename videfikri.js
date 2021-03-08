@@ -477,9 +477,37 @@ module.exports = videfikri = async (vf = new vf(), message) => {
             /* END OF SPAMMER */
 
             /* EDUCATION */
+            case 'kisahnabi':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query) return await vf.reply(from, `Untuk mencari kisah nabi\ngunakan ${prefix}kisahnabi query\n\nContoh: ${prefix}kisahnabi muhammad`, id)
+                await vf.reply(from, msg.wait(), id)
+                education.kisahnabi(query)
+                .then(async ({result}) => {
+                    const { nama, tahun_kelahiran, usia, tempat_lahir, image, description } = await result
+                    await vf.sendFileFromUrl(from, image, `➸ *Nama*: ${nama}\n➸ *Tahun Kelahiran*: ${tahun_kelahiran}\n➸ *Usia*: ${usia}\n➸ *Tempat Lahir*: ${tempat_lahir}\n➸ *Deskripsi*: ${description}`, id)
+                })
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                })
+            break
+            case 'randomquran':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                await vf.reply(from, msg.wait(), id)
+                education.quran()
+                .then(async ({result}) => {
+                    const { nomor, nama, asma, ayat, name, tipe, no_urut, rukuk, arti, keterangan } = await result
+                    await vf.reply(from, `➸ *Nomor*: ${nomor}\n➸ *Nama*: ${nama}\n➸ *Asma*: ${asma}\n➸ *Ayat*: ${ayat}\n➸ *Name*: ${name}\n➸ *Tipe*: ${tipe}\n➸ *No Urut*: ${no_urut}\n➸ *Rukuk*: ${rukuk}\n➸ *Arti*: ${arti}\n➸ *Keterangan*: ${keterangan}`, id)
+                })
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                })
+            break
             case 'covidindo':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 await vf.reply(from, msg.wait(), id)
+                education.covidindo()
                 .then(async ({result}) => {
                     await vf.reply(from, `➸ *Negara*: ${result.country}\n➸ *Positif*: ${result.positif}\n➸ *Negatif*: ${result.negatif}\n➸ *Meninggal*: ${result.meinggal}\n➸ *Sembuh*: ${result.sembuh}\n➸ *Dalam Perawatan*: ${result.dalam_perawatan}`, id)
                 })
@@ -631,6 +659,45 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                 await vf.reply(from, msg.wait(), id)
                 const emoji = emojiUnicode(query)
                 await vf.sendImageAsSticker(from, await vf.download(`https://videfikri.com/api/emojitopng/?emojicode=${emoji}`), { author: 'videfikri', pack: 'VF BOT' })
+                } catch (err) {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                }
+            break
+            case 'kodepos':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query) return await vf.reply(from, `Untuk mencari kodepos wilayah\ngunakan ${prefix}kodepos nama_wilayah`, id)
+                try {
+                await vf.reply(from, msg.wait(), id)
+                const kodepos = await axios.get(`https://videfikri.com/api/kodepos/?query=${query}`)
+                const datakodepos = kodepos.data.result
+                await vf.reply(from, `➸ *Provinsi*: ${datakodepos.provinsi}\n➸ *Kota*: ${datakodepos.kota}\n➸ *Kecamatan*: ${datakodepos.kecamatan}\n➸ *Kelurahan*: ${datakodepos.kelurahan}\n➸ *Kode Pos*: ${datakodepos.kodepos}`, id)
+                } catch (err) {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                }
+            break
+            case 'nulis':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query) return await vf.reply(from, `Untuk membuat bot menulis di buku\ngunakan ${prefix}nulis\n\nContoh: ${prefix}nulis pikri gans bet`, id)
+                try {
+                await vf.reply(from, msg.wait(), id)
+                const nulis = await axios.get(`https://videfikri.com/api/nulis/?query=${query}`)
+                const datanulis = nulis.data.result
+                await vf.sendFileFromUrl(from, datanulis.image, `nulisVFBOT.jpg`, '', id)
+                } catch (err) {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                }
+            break
+            case 'filmapik':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query) return await vf.reply(from, `Untuk mencari detail Film dari FilmApik\ngunakan ${prefix}filmapik query\n\nContoh: ${prefix}filmapik avenger`, id)
+                try {
+                await vf.reply(from, msg.wait(), id)
+                const filmapik = await axios.get(`https://videfikri.com/api/filmapik/?film=${query}`)
+                const datafilmapik = filmapik.data.result
+                await vf.sendFileFromUrl(from, datafilmapik.thumbnail, `FilmApikVFBOT.jpg`, `➸ *Title*: ${datafilmapik.title}\n➸ *ID*: ${datafilmapik.id}\n➸ *Thumbnail*: ${datafilmapik.thumbnail}\n➸ *Rating*: ${datafilmapik.rating}\n➸ *Views*: ${datafilmapik.views}\n➸ *Duration*: ${datafilmapik.duration}\n➸ *Release Date*: ${datafilmapik.release_date}\n➸ *Download URL*: ${datafilmapik.download_url}\n➸ *Description*: ${datafilmapik.description}`, id)
                 } catch (err) {
                     console.error(err)
                     await vf.reply(from, 'Error!', id)
