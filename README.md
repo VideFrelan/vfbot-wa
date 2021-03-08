@@ -96,6 +96,8 @@ Edit file penting yg berada di 'config.json'
 | Wikipedia EN        |      ✔️      |
 | Covid Indo          |      ✔️      |
 | KBBI                |      ✔️      |
+| Random Qur'an       |      ✔️      |
+| Kisah Nabi          |      ✔️      |
 
 |       Fun        | Availability |
 | :--------------: | :----------: |
@@ -129,6 +131,9 @@ Edit file penting yg berada di 'config.json'
 | Lirik Lagu         |      ✔️      |
 | Random Quotes Anime|      ✔️      |
 | Random Nekonime    |      ✔️      |
+| FilmApik Detail    |      ✔️      |
+| Kode Pos Finder    |      ✔️      |
+| Nulis API    |      ✔️      |
 
 |   Group Security   | Availability |
 | :----------------: | :----------: |
