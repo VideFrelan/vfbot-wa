@@ -652,6 +652,33 @@ module.exports = videfikri = async (vf = new vf(), message) => {
             break
 
             /* OTHERS */
+            case 'ip':
+            case 'iplookup':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query) return await vf.reply(from, `Untuk melihat rincian IP Address\ngunakan ${prefix}ip ip_address`, id)
+                try {
+                    await vf.reply(from, msg.wait(), id)
+                    const dataip = await axios.get(`https://videfikri.com/api/iplookup/?ip=${query}`)
+                    const iplookup = dataip.data.result
+                    await vf.reply(from, `➸ *IP*: ${iplookup.ip}\n➸ *Country*: ${iplookup.country}\n➸ *Country Code*: ${iplookup.country_code}\n➸ *Region*: ${iplookup.region}\n➸ *Region Name*: ${iplookup.region_name}\n➸ *City*: ${iplookup.city}\n➸ *ZIP*: ${iplookup.zip}\n➸ *Latitude*: ${iplookup.latitude}\n➸ *Longtitude*: ${iplookup.longtitude}\n➸ *Timezone*: ${iplookup.timezone}\n➸ *ISP*: ${iplookup.isp}\n➸ *ORG*: ${iplookup.org}\n➸ *AS*: ${iplookup.as}`, id)
+                } catch (err) {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                }
+            break
+            case 'npm':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                if (!query) return await vf.reply(from, `Format salah!\ngunakan ${prefix}npm package_name`, id)
+                try {
+                    await vf.reply(from, msg.wait(), id)
+                    const datanpm = await axios.get(`https://videfikri.com/api/npm/?query=${query}`)
+                    const npm = datanpm.data.result
+                    await vf.reply(from, `➸ *ID*: ${npm.id}\n➸ *Package Name*: ${npm.name}\n➸ *REV*: ${npm.rev}\n➸ *Version Latest*: ${npm.version_latest}\n➸ *Description*: ${npm.description}\n➸ *Homepage*: ${npm.homepage}\n➸ *Author Name*: ${npm.author_name}\n➸ *License*: ${npm.license}\n➸ *Maintainer*: ${npm.maintainer}\n➸ *Email*: ${npm.email}\n➸ *Created At*: ${npm.created_at}\n➸ *Last Modified*: ${npm.last_modified}`, id)
+                } catch (err) {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                }
+            break
             case 'emot':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Format salah!\nuntuk convert emoji to sticker\ngunakan ${prefix}emot emoji_nya`, id)
