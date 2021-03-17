@@ -6,6 +6,7 @@ const config = require('./config.json')
 const ownerNumber = config.owner
 
 const start = async (vf = new vf()) => {
+    console.log(color(figlet.textSync('vfbot-wa', '3D Diagonal'), 'magenta'))
     console.log(color('[VF BOT]', 'magenta'), color('VF BOT is now online!', 'aqua'))
     
     vf.onStateChanged((state) => {
