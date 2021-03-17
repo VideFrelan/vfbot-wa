@@ -484,7 +484,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                 education.kisahnabi(query)
                 .then(async ({result}) => {
                     const { nama, tahun_kelahiran, usia, tempat_lahir, image, description } = await result
-                    await vf.sendFileFromUrl(from, image, `➸ *Nama*: ${nama}\n➸ *Tahun Kelahiran*: ${tahun_kelahiran}\n➸ *Usia*: ${usia}\n➸ *Tempat Lahir*: ${tempat_lahir}\n➸ *Deskripsi*: ${description}`, id)
+                    await vf.sendFileFromUrl(from, image, 'kisahnabi.jpg', `➸ *Nama*: ${nama}\n➸ *Tahun Kelahiran*: ${tahun_kelahiran}\n➸ *Usia*: ${usia}\n➸ *Tempat Lahir*: ${tempat_lahir}\n➸ *Deskripsi*: ${description}`, id)
                 })
                 .catch(async (err) => {
                     console.error(err)
