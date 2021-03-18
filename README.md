@@ -22,7 +22,7 @@
 </p>
 <p align="center">
   <a href="https://github.com/VideFrelan/vfbot-wa#requirements">Requirements</a> •
-  <a href="https://github.com/VideFrelan/vfbot-wa#installation">Installation</a> •
+  <a href="https://github.com/VideFrelan/vfbot-wa#instalasi">Installation</a> •
   <a href="https://github.com/VideFrelan/vfbot-wa#features">Features</a> •
   <a href="https://github.com/VideFrelan/vfbot-wa#thanks-to">Thanks to</a>
 </p>
