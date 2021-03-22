@@ -524,7 +524,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                 await vf.reply(from, msg.wait(), id)
                 education.kbbi(query)
                 .then(async ({result}) => {
-                    await vf.reply(from, `➸ *Judul*: ${result.judul}\n➸ *PageID*: ${result.pageid}\n➸ *Isi Konten*: ${result.isi_konten}`, id)
+                    await vf.reply(from, `➸ ${result.hasil}`, id)
                 })
                 .catch(async (err) => {
                     console.error(err)
