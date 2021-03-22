@@ -29,7 +29,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
         const command = bcmd.toLowerCase().split(' ')[0] || ''
         const prefix = /^[°•π÷×¶∆£¢€¥®™✓_=|~!?@#$%^&.\/\\©^]/.test(command) ? command.match(/^[°•π÷×¶∆£¢€¥®™✓_=|~!?@#$%^&.\/\\©^]/gi) : '-'
         const chats = (type === 'chat') ? body : ((type === 'image' || type === 'video')) ? caption : ''
-        body = (type === 'chat' && body.startsWith(prefix)) ? body : (((type === 'image') && caption) && caption.startsWith(prefix)) ? caption : ''
+        body = (type === 'chat' && body.startsWith(prefix)) ? body : (((type === 'image' || type === 'video') && caption) && caption.startsWith(prefix)) ? caption : ''
         const args = body.trim().split(/ +/).slice(1)
         const ar = args.map((v) => v.toLowerCase())
         const query = args.join(' ')
@@ -94,7 +94,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
         }
 
         switch (command) {
-            case 'register': //By: Slavyam
+            case prefix+'register': //By: Slavyam
                 if (isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 const namaUser = query.substring(0, query.indexOf('|') - 1)
                 const umurUser = query.substring(query.lastIndexOf('|') + 2)
@@ -102,24 +102,24 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                 register.addRegisteredUser(sender.id, namaUser, umurUser, time, serialUser, _registered)
                 await vf.reply(from, `*「 REGISTRATION 」*\n\nRegistrasi berhasil!\n\n=======================\n➸ *Nama*: ${namaUser}\n➸ *Umur*: ${umurUser}\n➸ *Waktu pendaftaran*: ${now}\n➸ *Serial*: ${serialUser}\n=======================`, id)
             break
-            case 'antiporn'://PREMIUM
+            case prefix+'antiporn'://PREMIUM
                 await vf.reply(from, 'Premium feature!\nContact: wa.me/6285692655520', id)
             break
             /* RANDOM WORDS */
-            case 'fakta':
+            case prefix+'fakta':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 const datafakta = await axios.get(`https://videfikri.com/api/fakta/`)
                 const fakta = datafakta.data.result
                 await vf.reply(from, `${fakta.fakta}`, id)
             break
-            case 'quotes':
+            case prefix+'quotes':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 const dataquotes = await axios.get(`https://videfikri.com/api/randomquotes/`)
                 const quotes = dataquotes.data.result
                 await vf.reply(from, `➸ *Author*: ${quotes.author}\n➸ *Quotes*: ${quotes.quotes}`, id)
             break
             /* STICKER MAKER */
-            case 'takestick':
+            case prefix+'takestick':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                     if (quotedMsg && quotedMsg.type == 'sticker') {
                         if (!query.includes('|')) return await vf.reply(from, `Untuk mengubah watermark sticker, reply sticker dengan caption ${prefix}takestick package_name | author_name\n\nContoh: ${prefix}takestick PUNYA GUA | videfikri`, id)
@@ -137,7 +137,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                         await vf.reply(from, `Reply sticker yang ingin dicolong dengan caption ${prefix}takestick package_name | author_name\n\nContoh: ${prefix}takestick punya gua | videfikri`, id)
                     }
         break
-            case 'sgifwm':
+            case prefix+'sgifwm':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (isMedia && type === 'video' || mimetype === 'image/gif') {
                     if (!query.includes('|')) return await vf.reply(from, `Untuk membuat stickergif watermark\ngunakan ${prefix}sgifwm author | packname`, id)
@@ -176,8 +176,8 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, `Untuk membuat stickergif dengan watermark\ngunakan ${prefix}sgifwm author | packname`, id)
                 }
             break
-            case 'stickernocrop':
-            case 'stnc':
+            case prefix+'stickernocrop':
+            case prefix+'stnc':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (isMedia && isImage || isQuotedImage) {
                     try {
@@ -196,8 +196,8 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                 await vf.reply(from, `Untuk membuat sticker no crop\nsilahkan *upload* atau reply foto dengan caption ${prefix}stnc`, id)
             }
             break
-            case 'sticker':
-            case 'stiker':
+            case prefix+'sticker':
+            case prefix+'stiker':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (isMedia && isImage || isQuotedImage) {
                     try {
@@ -216,8 +216,8 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                 await vf.reply(from, `Untuk membuat sticker\nsilahkan *upload* atau reply foto dengan caption ${prefix}sticker`, id)
             }
             break
-            case 'stickergif':
-            case 'stikergif':
+            case prefix+'stickergif':
+            case prefix+'stikergif':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (isMedia && type === 'video' || mimetype === 'image/gif') {
                     await vf.reply(from, msg.wait(), id)
@@ -254,8 +254,8 @@ module.exports = videfikri = async (vf = new vf(), message) => {
             /* END OF STICKER MAKER */
 
             /* DOWNLOADER */
-            case 'igdl':
-            case 'ig':
+            case prefix+'igdl':
+            case prefix+'ig':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk mendownload Instagram Post seseorang\ngunakan ${prefix}igdl link_post`, id)
                 if (!isUrl(url) && !url.includes('instagram.com')) return await vf.reply(from, 'Perhatikan! URL harus dari instagram', id)
@@ -276,7 +276,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                         await vf.reply(from, `Ada yang Error!`, id)
                     })
             break
-            case 'play':
+            case prefix+'play':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk memutar musik dari YouTube\ngunakan ${prefix}play judul_lagu\n\nContoh: ${prefix}play martin garrix`, id)
                 await vf.reply(from, msg.wait(), id)
@@ -300,7 +300,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 })
                 break
-                case 'igtv':
+                case prefix+'igtv':
                     if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                     if (!query) return await vf.reply(from, `Format salah!\nuntuk mendownload Instagram TV\ngunakan ${prefix}igtv link_igtv`, id)
                     if (!isUrl(url) && !url.includes('instagram.com')) return await vf.reply(from, 'Perhatikan! URL harus dari instagram', id)
@@ -316,7 +316,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                         await vf.reply(from, 'Error!', id)
                     })
                 break
-                case 'ytmp3':
+                case prefix+'ytmp3':
                     if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                     if (!query) return await vf.reply(from, `Format salah!\nuntuk mendownload YouTube to MP3\ngunakan ${prefix}ytmp3 link_video`, id)
                     await vf.reply(from, msg.wait(), id)
@@ -335,7 +335,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                         await vf.reply(from, 'Error!', id)
                     })
                 break
-                case 'ytmp4':
+                case prefix+'ytmp4':
                     if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                     if (!query) return await vf.reply(from, `Format salah!\nuntuk mendownload YouTube to MP4\ngunakan ${prefix}ytmp4 link_video`, id)
                     await vf.reply(from, msg.wait(), id)
@@ -353,7 +353,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                 /* END OF DOWNLOADER */
 
                 /* STALKER */
-                case 'igstalk':
+                case prefix+'igstalk':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Format salah!\nuntuk meng-stalk akun Instagram seseorang, gunakan ${prefix}stalkig username\n\nContoh: ${prefix}stalkig videfikri`, id)
                 await vf.reply(from, msg.wait(), id)
@@ -367,7 +367,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 })
             break
-            case 'twtprof':
+            case prefix+'twtprof':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Format salah!\nuntuk meng-stalk akun Twitter seseorang\ngunakan ${prefix}twtprof username`, id)
                 await vf.reply(from, msg.wait(), id)
@@ -381,7 +381,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 })
             break
-            case 'github':
+            case prefix+'github':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Format salah!\nuntuk meng-stalk akun Github\ngunakan ${prefix}github username`, id)
                 await vf.reply(from, msg.wait(), id)
@@ -398,7 +398,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
             /* END OF STALKER */
 
             /* FUN MENU */
-            case 'simi':
+            case prefix+'simi':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Gunakan ${prefix}simi teks`, id)
                 fun.simsimi(query)
@@ -410,7 +410,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 })
             break
-            case 'balikhuruf':
+            case prefix+'balikhuruf':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk membalik huruf\ngunakan ${prefix}balikhuruf teks`, id)
                 fun.balikhuruf(query)
@@ -422,7 +422,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 })
             break
-            case 'hitunghuruf':
+            case prefix+'hitunghuruf':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk menghitung jumlah huruf\ngunakan ${prefix}hitunghuruf teks`, id)
                 fun.hitunghuruf(query)
@@ -434,7 +434,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 })
             break
-            case 'hilih':
+            case prefix+'hilih':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk membuat hilih teks\ngunakan ${prefix}hilih teks\n\nContoh: ${prefix}hilih halah bacot`, id)
                 fun.hilihteks(query)
@@ -449,7 +449,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
             /* END OF FUN MENU */
             
             /* SPAMMER */
-            case 'email':
+            case prefix+'email':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query.includes('|')) return await vf.reply(from, `Untuk mengirim email kepada seseorang\ngunakan ${prefix}email target | subjek | pesan`, id)
                 const target = query.substring(0, query.indexOf('|') - 1)
@@ -464,7 +464,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 })
             break
-            case 'call':
+            case prefix+'call':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk mengirim panggilan kepada seseorang\ngunakan ${prefix}call nomor_telpon`, id)
                 spammer.call(query)
@@ -479,7 +479,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
             /* END OF SPAMMER */
 
             /* EDUCATION */
-            case 'kisahnabi':
+            case prefix+'kisahnabi':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk mencari kisah nabi\ngunakan ${prefix}kisahnabi query\n\nContoh: ${prefix}kisahnabi muhammad`, id)
                 await vf.reply(from, msg.wait(), id)
@@ -493,7 +493,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 })
             break
-            case 'randomquran':
+            case prefix+'randomquran':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 await vf.reply(from, msg.wait(), id)
                 education.quran()
@@ -506,7 +506,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 })
             break
-            case 'covidindo':
+            case prefix+'covidindo':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 await vf.reply(from, msg.wait(), id)
                 education.covidindo()
@@ -518,7 +518,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 })
             break
-            case 'kbbi':
+            case prefix+'kbbi':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk mencari kata KBBI\ngunakan ${prefix}kbbi query\n\nContoh: ${prefix}kbbi manusia`, id)
                 await vf.reply(from, msg.wait(), id)
@@ -531,7 +531,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 })
             break
-            case 'wiki':
+            case prefix+'wiki':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk mencari Wikipedia\ngunakan ${prefix}wiki query\n\nContoh: ${prefix}wiki indonesia`, id)
                 await vf.reply(from, msg.wait(), id)
@@ -544,7 +544,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 })
             break
-            case 'wikien':
+            case prefix+'wikien':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk mencari Wikipedia bahasa inggris\ngunakan ${prefix}wikien query\n\nContoh: ${prefix}wikien indonesia`, id)
                 await vf.reply(from, msg.wait(), id)
@@ -560,7 +560,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
             /* END OF EDUCATION */
 
             /* MODERATIOR CMDS */
-            case 'antilink':
+            case prefix+'antilink':
                 if (!isGroupMsg) return await vf.reply(from, msg.groupOnly(), id)
                 if (!isGroupAdmins) return await vf.reply(from, msg.adminOnly(), id)
                 if (!isBotGroupAdmins) return await vf.reply(from, msg.botNotAdmin(), id)
@@ -577,7 +577,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, `Untuk melindungi grup ini dari link grup lain\nketik ${prefix}antilink on --enable\n${prefix}antilink off --disable`, id)
                 }
             break
-            case 'antivirtext':
+            case prefix+'antivirtext':
                 if (!isGroupMsg) return await vf.reply(from, msg.groupOnly(), id)
                 if (!isGroupAdmins) return await vf.reply(from, msg.adminOnly(), id)
                 if (!isBotGroupAdmins) return await vf.reply(from, msg.botNotAdmin(), id)
@@ -597,7 +597,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
             /* END OF MODERATION CMDS */
 
             /* MUSIC */
-            case 'chord':
+            case prefix+'chord':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Format salah!\nuntuk mencari chord sebuah lagu\nketik ${prefix}chord judul_lagu`, id)
                 try {
@@ -610,7 +610,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 }
             break
-            case 'lirik':
+            case prefix+'lirik':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Format salah!\nuntuk mencari lirik sebuah lagu\nketik ${prefix}lirik judul_lagu`, id)
                 try {
@@ -626,8 +626,8 @@ module.exports = videfikri = async (vf = new vf(), message) => {
             /* END OF MUSIC */
 
             /* ANIME */
-            case 'nekonime':
-            case 'neko':
+            case prefix+'nekonime':
+            case prefix+'neko':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 try {
                 await vf.reply(from, msg.wait(), id)
@@ -639,8 +639,8 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 }
             break
-            case 'animequote':
-            case 'animequotes':
+            case prefix+'animequote':
+            case prefix+'animequotes':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
             try {
                 await vf.reply(from, msg.wait(), id)
@@ -654,8 +654,8 @@ module.exports = videfikri = async (vf = new vf(), message) => {
             break
 
             /* OTHERS */
-            case 'ip':
-            case 'iplookup':
+            case prefix+'ip':
+            case prefix+'iplookup':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk melihat rincian IP Address\ngunakan ${prefix}ip ip_address`, id)
                 try {
@@ -668,7 +668,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 }
             break
-            case 'npm':
+            case prefix+'npm':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Format salah!\ngunakan ${prefix}npm package_name`, id)
                 try {
@@ -681,7 +681,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 }
             break
-            case 'emot':
+            case prefix+'emot':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Format salah!\nuntuk convert emoji to sticker\ngunakan ${prefix}emot emoji_nya`, id)
                 try {
@@ -693,7 +693,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 }
             break
-            case 'kodepos':
+            case prefix+'kodepos':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk mencari kodepos wilayah\ngunakan ${prefix}kodepos nama_wilayah`, id)
                 try {
@@ -706,7 +706,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 }
             break
-            case 'nulis':
+            case prefix+'nulis':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk membuat bot menulis di buku\ngunakan ${prefix}nulis\n\nContoh: ${prefix}nulis pikri gans bet`, id)
                 try {
@@ -719,7 +719,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                     await vf.reply(from, 'Error!', id)
                 }
             break
-            case 'filmapik':
+            case prefix+'filmapik':
                 if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 if (!query) return await vf.reply(from, `Untuk mencari detail Film dari FilmApik\ngunakan ${prefix}filmapik query\n\nContoh: ${prefix}filmapik avenger`, id)
                 try {
@@ -734,13 +734,13 @@ module.exports = videfikri = async (vf = new vf(), message) => {
             break
             /* END OF OTHERS */
 
-            case 'menuadmin':
+            case prefix+'menuadmin':
                 if (isGroupMsg && isGroupAdmins) {
                 await vf.reply(from, msg.menuAdmin(), id)
                 }
             break
-            case 'menu':
-            case 'help':
+            case prefix+'menu':
+            case prefix+'help':
                 await vf.reply(from, msg.menu(pushname), id)
                 .then(() => ((isGroupMsg) && (isGroupAdmins)) ? vf.sendText(from, `Menu Admin Grup: *${prefix}menuadmin*`) : null)
             break
