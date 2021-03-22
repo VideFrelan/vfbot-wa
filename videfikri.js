@@ -20,14 +20,16 @@ module.exports = videfikri = async (vf = new vf(), message) => {
     try {
         const { from, id, type, caption, chat, t, sender, isGroupMsg, isMedia, mimetype, quotedMsg } = message
         let { body } = message
-        const { owner, prefix } = config
+        const { owner } = config
         const { name, formattedTitle } = chat
         let { pushname, formattedName, verifiedName } = sender
         pushname = pushname || formattedName || verifiedName
-        body = (type === 'chat' && body.startsWith(prefix)) ? body : (((type === 'image') && caption) && caption.startsWith(prefix)) ? caption : ''
         
+        const bcmd = caption || body || ''
+        const command = bcmd.toLowerCase().split(' ')[0] || ''
+        const prefix = /^[°•π÷×¶∆£¢€¥®™✓_=|~!?@#$%^&.\/\\©^]/.test(command) ? command.match(/^[°•π÷×¶∆£¢€¥®™✓_=|~!?@#$%^&.\/\\©^]/gi) : '-'
         const chats = (type === 'chat') ? body : ((type === 'image' || type === 'video')) ? caption : ''
-        const command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
+        body = (type === 'chat' && body.startsWith(prefix)) ? body : (((type === 'image') && caption) && caption.startsWith(prefix)) ? caption : ''
         const args = body.trim().split(/ +/).slice(1)
         const ar = args.map((v) => v.toLowerCase())
         const query = args.join(' ')
