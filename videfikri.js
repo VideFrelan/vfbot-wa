@@ -744,6 +744,10 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                 await vf.reply(from, msg.menu(pushname), id)
                 .then(() => ((isGroupMsg) && (isGroupAdmins)) ? vf.sendText(from, `Menu Admin Grup: *${prefix}menuadmin*`) : null)
             break
+            default:
+                if (isCmd) {
+                    await vf.reply(from, `Maaf ${pushname}!\nCommand *${command}* tidak ada dalam daftar *${prefix}menu*`, id)
+                }
         }
     } catch (err) {
         console.error(err)
