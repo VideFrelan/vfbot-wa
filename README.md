@@ -14,7 +14,7 @@
   <a href="https://github.com/VideFrelan/vfbot-wa"><img title="Stars" src="https://img.shields.io/github/stars/VideFrelan/vfbot-wa?color=red&style=flat-square" /></a>
   <a href="https://github.com/VideFrelan/vfbot-wa/network/members"><img title="Forks" src="https://img.shields.io/github/forks/VideFrelan/vfbot-wa?color=red&style=flat-square" /></a>
   <a href="https://github.com/VideFrelan/vfbot-wa/watchers"><img title="Watching" src="https://img.shields.io/github/watchers/VideFrelan/vfbot-wa?label=watchers&color=blue&style=flat-square" /></a> <br>
-  <a href="https://www.codefactor.io/repository/github/VideFrelan/vfbot-wa"><img src="https://www.codefactor.io/repository/github/VideFrelan/vfbot-wa/badge" /></a>
+
   <a href="https://www.npmjs.com/package/@open-wa/wa-automate"><img src="https://img.shields.io/npm/v/@open-wa/wa-automate.svg?color=green" /></a>
   <a href="https://app.fossa.com/projects/git%2Bgithub.com%2FSlavyanDesu%2FBocchiBot?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FSlavyanDesu%2FBocchiBot.svg?type=shield"/></a>
   <img src="https://img.shields.io/node/v/@open-wa/wa-automate" />
