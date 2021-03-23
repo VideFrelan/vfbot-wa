@@ -42,7 +42,7 @@
 # Instalasi
 ## 💻 Clone Repo & Instalasi dependencies
 ```bash
-> git clone https://github.com/VideFrelan/vfbot-wa
+> git clone https://github.com/VideFrelan/vfbot-wa.git
 > cd vfbot-wa
 > npm install
 ```
@@ -56,9 +56,11 @@ Edit file penting yg berada di 'config.json'
 }
 ```
 
-`owner`: nomor WhatsApp anda (Bukan nomor bot). 
+`owner`: nomor WhatsApp Anda (Bukan nomor bot).
 
-`uaOverride`: your user agent.  
+`prefix`: bot ini multi-prefix.
+
+`uaOverride`: your user agent.
 
 ## 🆗 Menjalankan bot
 ```bash
