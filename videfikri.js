@@ -12,6 +12,7 @@ const fs = require('fs-extra')
 const fetch = require('node-fetch')
 const emojiUnicode = require('emoji-unicode')
 const moment = require('moment-timezone')
+const ocrtess = require('node-tesseract-ocr')
 moment.tz.setDefault('Asia/Jakarta').locale('id')
 
 // eslint-disable-next-line no-undef
@@ -94,6 +95,44 @@ module.exports = videfikri = async (vf = new vf(), message) => {
         }
 
         switch (command) {
+            case prefix+'ocr':
+                if (!isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
+                const ocrconf = {
+                    lang: 'eng',
+                    oem: '1',
+                    psm: '3'
+                }
+                if (isMedia && isImage || isQuotedImage) {
+                    await vf.reply(from, msg.wait(), id)
+                    const encryptMedia = isQuotedImage ? quotedMsg : message
+                    const mediaData = await decryptMedia(encryptMedia, uaOverride)
+                    fs.writeFileSync(`./temp/${sender.id}.jpg`, mediaData)
+                    ocrtess.recognize(`./temp/${sender.id}.jpg`, ocrconf)
+                    .then(text => {
+                    vf.reply(from, `*...:* *OCR RESULT* *:...*\n\n${text}`, id)
+                    fs.unlinkSync(`./temp/${sender.id}.jpg`)
+                    })
+                    .catch(async (err) => {
+                        console.error(err)
+                        await vf.reply(from, 'Error!', id)
+                    })
+            } else if (quotedMsg && quotedMsg.type == 'sticker') {
+                    await vf.reply(from, msg.wait(), id)
+                    const mediaData = await decryptMedia(quotedMsg, uaOverride)
+                    fs.writeFileSync(`./temp/${sender.id}.jpg`, mediaData)
+                    ocrtess.recognize(`./temp/${sender.id}.jpg`, ocrconf)
+                    .then(text => {
+                    vf.reply(from, `*...:* *OCR RESULT* *:...*\n\n${text}`, id)
+                    fs.unlinkSync(`./temp/${sender.id}.jpg`)
+                })
+                .catch(async (err) => {
+                    console.error(err)
+                    await vf.reply(from, 'Error!', id)
+                })
+            } else {
+                await vf.reply(from, `Untuk menggunakan ocr\nsilahkan upload atau reply foto dengan perintah ${prefix}ocr\n\nAtau anda juga bisa reply sticker dengan perintah ${prefix}ocr`, id)
+            }
+            break
             case prefix+'register': //By: Slavyam
                 if (isRegistered) return await vf.reply(from, msg.notRegistered(pushname), id)
                 const namaUser = query.substring(0, query.indexOf('|') - 1)
