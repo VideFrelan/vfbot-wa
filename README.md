@@ -152,6 +152,7 @@ Jika berhasil, akan memberikanmu pesan seperti: `SUCCESS: specified value was sa
 
 |      OTHERS        | Availability |
 | :----------------: | :----------: |
+| OCR (Image to Text)|      ✔️      |
 | NPM Info           |      ✔️      |
 | IP Lookup          |      ✔️      |
 | Random Nekonime    |      ✔️      |
