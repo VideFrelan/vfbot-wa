@@ -83,7 +83,7 @@ Jika berhasil, akan memberikanmu pesan seperti: `SUCCESS: specified value was sa
 * Run Command Prompt as Administrator.
 * Jalankan perintah berikut::
 ```cmd
-> setx /m PATH "C:\Tessract-OCR;%PATH%"
+> setx /m PATH "C:\Tesseract-OCR;%PATH%"
 ```
 Jika berhasil, akan memberikanmu pesan seperti: `SUCCESS: specified value was saved`.
 * Sekarang setelah Anda menginstal Tesseract, verifikasi bahwa itu berhasil dengan menjalankan perintah ini untuk melihat versi:
