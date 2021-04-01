@@ -56,6 +56,12 @@ Edit file penting yg berada di 'config.json'
 }
 ```
 
+`owner`: nomor WhatsApp Anda (Bukan nomor bot).
+
+`prefix`: bot ini multi-prefix.
+
+`uaOverride`: your user agent.
+
 ## 🛠️ Installing the FFmpeg
 * Unduh salah satu versi FFmpeg yang tersedia dengan mengklik [di sini](https://www.gyan.dev/ffmpeg/builds/).
 * Extract file ke `C:\` path.
@@ -84,12 +90,6 @@ Jika berhasil, akan memberikanmu pesan seperti: `SUCCESS: specified value was sa
 ```cmd
 > tesseract -version
 ```
-
-`owner`: nomor WhatsApp Anda (Bukan nomor bot).
-
-`prefix`: bot ini multi-prefix.
-
-`uaOverride`: your user agent.
 
 ## 🆗 Menjalankan bot
 ```bash
