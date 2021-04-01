@@ -56,6 +56,35 @@ Edit file penting yg berada di 'config.json'
 }
 ```
 
+## 🛠️ Installing the FFmpeg
+* Unduh salah satu versi FFmpeg yang tersedia dengan mengklik [di sini](https://www.gyan.dev/ffmpeg/builds/).
+* Extract file ke `C:\` path.
+* Ganti nama folder yang telah di-extract menjadi `ffmpeg`.
+* Run Command Prompt as Administrator.
+* Jalankan perintah berikut::
+```cmd
+> setx /m PATH "C:\ffmpeg\bin;%PATH%"
+```
+Jika berhasil, akan memberikanmu pesan seperti: `SUCCESS: specified value was saved`.
+* Sekarang setelah Anda menginstal FFmpeg, verifikasi bahwa itu berhasil dengan menjalankan perintah ini untuk melihat versi:
+```cmd
+> ffmpeg -version
+```
+
+## 🧾 Installing the Tesseract
+* Unduh program Tesseract [di sini](https://s.id/vftesseract).
+* Jalankan program Tesseract dengan run As Administrator.
+* Run Command Prompt as Administrator.
+* Jalankan perintah berikut::
+```cmd
+> setx /m PATH "C:\Tessract-OCR;%PATH%"
+```
+Jika berhasil, akan memberikanmu pesan seperti: `SUCCESS: specified value was saved`.
+* Sekarang setelah Anda menginstal Tesseract, verifikasi bahwa itu berhasil dengan menjalankan perintah ini untuk melihat versi:
+```cmd
+> tesseract -version
+```
+
 `owner`: nomor WhatsApp Anda (Bukan nomor bot).
 
 `prefix`: bot ini multi-prefix.
