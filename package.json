@@ -10,7 +10,7 @@
   "author": "VideFikri",
   "license": "MIT",
   "dependencies": {
-    "@open-wa/wa-automate": "^3.13.1",
+    "@open-wa/wa-automate": "^4.1.1",
     "axios": "^0.21.1",
     "chalk": "^4.1.0",
     "crypto": "^1.0.1",
