@@ -546,7 +546,7 @@ module.exports = videfikri = async (vf = new vf(), message) => {
                 await vf.reply(from, msg.wait(), id)
                 education.covidindo()
                 .then(async ({result}) => {
-                    await vf.reply(from, `➸ *Negara*: ${result.country}\n➸ *Positif*: ${result.positif}\n➸ *Negatif*: ${result.negatif}\n➸ *Meninggal*: ${result.meinggal}\n➸ *Sembuh*: ${result.sembuh}\n➸ *Dalam Perawatan*: ${result.dalam_perawatan}`, id)
+                    await vf.reply(from, `➸ *Negara*: ${result.country}\n➸ *Positif*: ${result.positif}\n➸ *Meninggal*: ${result.meninggal}\n➸ *Sembuh*: ${result.sembuh}\n➸ *Dalam Perawatan*: ${result.dalam_perawatan}`, id)
                 })
                 .catch(async (err) => {
                     console.error(err)
