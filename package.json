@@ -18,7 +18,7 @@
     "figlet": "^1.5.0",
     "fs-extra": "^9.0.1",
     "marked": "^4.0.10",
-    "moment-timezone": "^0.5.32",
+    "moment-timezone": "^0.5.35",
      "node-tesseract-ocr": "^2.0.0",
     "node-fetch": "^2.6.7"
   },
