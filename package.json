@@ -20,7 +20,7 @@
     "marked": "^4.0.10",
     "moment-timezone": "^0.5.32",
      "node-tesseract-ocr": "^2.0.0",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.7"
   },
   "devDependencies": {
     "eslint": "^7.17.0"
