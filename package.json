@@ -11,7 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@open-wa/wa-automate": "^4.1.1",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "chalk": "^4.1.0",
     "crypto": "^1.0.1",
     "emoji-unicode": "^2.0.1",
