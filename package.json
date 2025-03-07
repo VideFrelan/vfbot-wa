@@ -10,8 +10,8 @@
   "author": "VideFikri",
   "license": "MIT",
   "dependencies": {
-    "@open-wa/wa-automate": "^4.64.0",
-    "axios": "^0.21.2",
+    "@open-wa/wa-automate": "^4.76.0",
+    "axios": "^1.8.2",
     "chalk": "^4.1.0",
     "crypto": "^1.0.1",
     "emoji-unicode": "^2.0.1",
